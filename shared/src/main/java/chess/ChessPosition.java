@@ -10,6 +10,10 @@ import java.util.Objects;
  */
 public class ChessPosition {
 
+    private int row;
+    private int col;
+    private ChessPiece piece; //usually null
+
     public ChessPosition(int row, int col) {
     }
 
