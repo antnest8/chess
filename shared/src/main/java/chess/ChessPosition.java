@@ -25,6 +25,10 @@ public class ChessPosition {
         throw new RuntimeException("Not implemented");
     }
 
+    public char getRowLetter(){
+        throw new RuntimeException("Not implemented"); //I prefer the tradition letter representation for strings
+    }
+
     /**
      * @return which column this position is in
      * 1 codes for the left column
@@ -35,7 +39,7 @@ public class ChessPosition {
 
     @Override
     public String toString(){
-        return "( " + getRow() + ", " + getColumn() + ")";
+        return "( " + getRowLetter() + getColumn() + ")";
     }
 
     @Override
