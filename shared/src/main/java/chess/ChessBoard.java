@@ -8,6 +8,9 @@ package chess;
  */
 public class ChessBoard {
 
+    //private ChessPosition[][]; ~ Hold chess positions in an 8x8 grid
+
+
     public ChessBoard() {
         
     }
