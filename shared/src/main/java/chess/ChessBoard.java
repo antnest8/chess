@@ -108,9 +108,23 @@ public class ChessBoard {
 
     @Override
     public String toString() {
-        return "ChessBoard{" +
-                "boardSquares=" + Arrays.toString(boardSquares) +
-                '}';
+        var representation = new StringBuilder();
+
+        for (int y = 1; y <= 8; y++) {
+            for (int x = 1; x <= 8; x++) {
+                representation.append("|");
+                ChessPosition pos = new ChessPosition(y, x);
+                if(getPosition(pos).hasPiece()){
+                    representation.append(getPiece(pos).toString());
+                }else{
+                    representation.append(" ");
+                }
+
+            }
+            representation.append("|\n");
+        }
+
+        return representation.toString();
     }
 
     @Override
