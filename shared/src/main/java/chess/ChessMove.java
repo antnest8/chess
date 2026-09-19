@@ -10,30 +10,30 @@ import java.util.Objects;
  */
 public class ChessMove {
 
-    private ChessPosition startPos;
-    private ChessPosition endPos;
-    private ChessPiece.PieceType pieceType;
-    private ChessPiece.PieceType promotionPiece;
+    private final ChessPosition startPos;
+    private final ChessPosition endPos;
+    private final ChessPiece.PieceType promotionPiece;
 
 
     public ChessMove(ChessPosition startPosition, ChessPosition endPosition,
                      ChessPiece.PieceType promotionPiece) {
+        this.startPos = startPosition;
+        this.endPos = endPosition;
+        this.promotionPiece = promotionPiece;
     }
 
     /**
      * @return ChessPosition of starting location
      */
     public ChessPosition getStartPosition() {
-        return null;
-        //throw new RuntimeException("Not implemented");
+        return startPos;
     }
 
     /**
      * @return ChessPosition of ending location
      */
     public ChessPosition getEndPosition() {
-        return null;
-        //throw new RuntimeException("Not implemented");
+        return endPos;
     }
 
     /**
@@ -43,8 +43,7 @@ public class ChessMove {
      * @return Type of piece to promote a pawn to, or null if no promotion
      */
     public ChessPiece.PieceType getPromotionPiece() {
-        return null;
-        //throw new RuntimeException("Not implemented");
+        return promotionPiece;
     }
 
     @Override

@@ -42,7 +42,7 @@ public class ChessPosition {
 
     @Override
     public String toString(){
-        return "( " + getRowLetter() + getColumn() + ")";
+        return "Position=(" + getRowLetter() + getColumn() + ")";
     }
 
     @Override
