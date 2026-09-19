@@ -51,7 +51,7 @@ public class ChessBoard {
             return boardSquares[target.getRow() - 1][target.getColumn() - 1];
         }
         else{
-            throw new ArrayIndexOutOfBoundsException("Position out of bounds!");
+            throw new ArrayIndexOutOfBoundsException("Position (" + target.getRow() + ", " + target.getColumn() + ") out of bounds!");
         }
     }
 
