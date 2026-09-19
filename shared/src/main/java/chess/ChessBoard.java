@@ -31,7 +31,7 @@ public class ChessBoard {
      * @param piece    the piece to add
      */
     public void addPiece(ChessPosition position, ChessPiece piece) {
-        throw new RuntimeException("Not implemented");
+        getPosition(position).addPiece(piece);
     }
 
     /**
@@ -58,6 +58,11 @@ public class ChessBoard {
     }
 
     public ChessPosition getPosition(ChessPosition target) {
-        return boardSquares[target.getRow() - 1][target.getColumn() - 1];
+        if(positionExists(target)){
+            return boardSquares[target.getRow() - 1][target.getColumn() - 1];
+        }
+        else{
+            throw new ArrayIndexOutOfBoundsException("Position out of bounds!");
+        }
     }
 }

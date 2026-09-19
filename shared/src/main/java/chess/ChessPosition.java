@@ -61,4 +61,8 @@ public class ChessPosition {
 
     public boolean hasPiece() {
     }
+
+    public void addPiece(ChessPiece piece){
+        this.piece = piece;
+    }
 }
