@@ -8,6 +8,9 @@ package chess;
  */
 public class ChessBoard {
 
+    /*
+    ---Constructors -----------------------------------------
+     */
     final private ChessPosition[][] boardSquares; //~ Hold chess positions in an 8x8 grid
 
 
@@ -24,15 +27,9 @@ public class ChessBoard {
         }
     }
 
-    /**
-     * Adds a chess piece to the chessboard
-     *
-     * @param position where to add the piece to
-     * @param piece    the piece to add
+    /*
+    ---Getters--------------------------------------------
      */
-    public void addPiece(ChessPosition position, ChessPiece piece) {
-        getPosition(position).addPiece(piece);
-    }
 
     /**
      * Gets a chess piece on the chessboard
@@ -44,6 +41,34 @@ public class ChessBoard {
     public ChessPiece getPiece(ChessPosition position) {
         return getPosition(position).getPiece();
     }
+
+    public boolean positionExists(ChessPosition target) {
+        return (target.getRow() < 9 && target.getRow() > 0) && (target.getColumn() < 9 && target.getColumn() > 0);
+    }
+
+    public ChessPosition getPosition(ChessPosition target) {
+        if(positionExists(target)){
+            return boardSquares[target.getRow() - 1][target.getColumn() - 1];
+        }
+        else{
+            throw new ArrayIndexOutOfBoundsException("Position out of bounds!");
+        }
+    }
+
+    /*
+    ---Setters--------------------------------------------------------
+     */
+
+    /**
+     * Adds a chess piece to the chessboard
+     *
+     * @param position where to add the piece to
+     * @param piece    the piece to add
+     */
+    public void addPiece(ChessPosition position, ChessPiece piece) {
+        getPosition(position).addPiece(piece);
+    }
+
 
     /**
      * Sets the board to the default starting board
@@ -77,16 +102,5 @@ public class ChessBoard {
 
     }
 
-    public boolean positionExists(ChessPosition target) {
-        return (target.getRow() < 9 && target.getRow() > 0) && (target.getColumn() < 9 && target.getColumn() > 0);
-    }
 
-    public ChessPosition getPosition(ChessPosition target) {
-        if(positionExists(target)){
-            return boardSquares[target.getRow() - 1][target.getColumn() - 1];
-        }
-        else{
-            throw new ArrayIndexOutOfBoundsException("Position out of bounds!");
-        }
-    }
 }
