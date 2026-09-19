@@ -5,9 +5,9 @@ import java.util.Collection;
 
 public class BishopMoves implements MoveProvider{
 
-    private final int[][] DIRECTIONS = {{1, 0}, {-1, 0}, {0, -1}, {0, 1}};
+    private final int[][] DIRECTIONS = {{1, 1}, {-1, -1}, {1, -1}, {-1, 1}};
 
-    public Collection<ChessMove> getValidMoves(ChessBoard board, ChessPosition position){
+    public Collection<ChessMove> getValidMoves(ChessBoard board, ChessPosition position, ChessGame.TeamColor color){
         var moves = new ArrayList<ChessMove>();
 
         for(int[] dir : DIRECTIONS){
