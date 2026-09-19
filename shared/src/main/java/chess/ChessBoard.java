@@ -51,11 +51,10 @@ public class ChessBoard {
     }
 
     public ChessPosition getPosition(ChessPosition target) {
-        /*
         if(!positionExists(target)) {
             throw new ArrayIndexOutOfBoundsException("Position (" + target.getRow() + ", " + target.getColumn() + ") out of bounds!");
         }
-        */
+
         return boardSquares[target.getRow() - 1][target.getColumn() - 1];
     }
 
@@ -97,11 +96,11 @@ public class ChessBoard {
         addPiece(new ChessPosition(8, 7), new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KNIGHT));
         addPiece(new ChessPosition(8, 8), new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.ROOK));
 
-        for(ChessPosition square : boardSquares[1]){
-            addPiece(square, new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN));
+        for(int i = 1; i <= 8; i++){
+            addPiece(new ChessPosition(2, i), new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN));
         }
-        for(ChessPosition square : boardSquares[7]){
-            addPiece(square, new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN));
+        for(int i = 1; i <= 8; i++){
+            addPiece(new ChessPosition(7, i), new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN));
         }
 
     }
@@ -130,15 +129,7 @@ public class ChessBoard {
     @Override
     public boolean equals(Object o) {
         if (o instanceof ChessBoard that) {
-            for (int y = 1; y <= 8; y++) {
-                for (int x = 1; x <= 8; x++) {
-                    ChessPosition position = new ChessPosition(y, x);
-                    if (!getPiece(position).equals(that.getPiece(position))) {
-                        return false;
-                    }
-                }
-            }
-            return true;
+            return toString().equals(that.toString());
         }else {
             return false;
         }
@@ -146,6 +137,6 @@ public class ChessBoard {
 
     @Override
     public int hashCode() {
-        return Arrays.deepHashCode(boardSquares);
+        return 23 * Objects.hashCode(toString());
     }
 }
