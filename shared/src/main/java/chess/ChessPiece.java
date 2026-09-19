@@ -1,6 +1,7 @@
 package chess;
 
 import java.util.Collection;
+import java.util.Locale;
 import java.util.Objects;
 
 /**
@@ -59,7 +60,18 @@ public class ChessPiece {
 
     @Override
     public String toString(){
-        return "ChessPiece={team: " + getTeamColor() + ", type: " + getPieceType() + "}";
+        String symbol;
+        switch(type){
+            case PieceType.PAWN -> symbol = "p";
+            case PieceType.ROOK -> symbol = "r";
+            case PieceType.KNIGHT -> symbol = "n";
+            case PieceType.BISHOP -> symbol = "b";
+            case PieceType.QUEEN -> symbol = "q";
+            case PieceType.KING -> symbol = "k";
+            default -> symbol = "j";
+        }
+        if(pieceColor == ChessGame.TeamColor.BLACK){symbol = symbol.toUpperCase();}
+        return symbol;
     }
 
     @Override
