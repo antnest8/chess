@@ -13,7 +13,6 @@ public class ChessPiece {
 
     private ChessGame.TeamColor pieceColor;
     private ChessPiece.PieceType type;
-    private ChessPosition position;
 
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
     }
@@ -57,7 +56,7 @@ public class ChessPiece {
 
     @Override
     public String toString(){
-        return "ChessPiece={team: " + getTeamColor() + ", type: " + getPieceType() + ", position: " + this.position + "}";
+        return "ChessPiece={team: " + getTeamColor() + ", type: " + getPieceType() + "}";
     }
 
     @Override
