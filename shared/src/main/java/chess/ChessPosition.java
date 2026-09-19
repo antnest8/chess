@@ -13,6 +13,7 @@ public class ChessPosition {
     private final int row;
     private final int col;
     private ChessPiece piece; //usually null
+    private final char[] ROWCHARS = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
 
     public ChessPosition(int row, int col) {
         this.row = row;
@@ -28,7 +29,7 @@ public class ChessPosition {
     }
 
     public char getRowLetter(){
-        return 'a';
+        return ROWCHARS[row - 1];
     }
 
     /**
