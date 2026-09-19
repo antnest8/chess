@@ -47,12 +47,11 @@ public class ChessBoard {
     }
 
     public ChessPosition getPosition(ChessPosition target) {
-        if(positionExists(target)){
-            return boardSquares[target.getRow() - 1][target.getColumn() - 1];
-        }
-        else{
+        if(!positionExists(target)) {
             throw new ArrayIndexOutOfBoundsException("Position (" + target.getRow() + ", " + target.getColumn() + ") out of bounds!");
         }
+
+        return boardSquares[target.getRow() - 1][target.getColumn() - 1];
     }
 
     /*
