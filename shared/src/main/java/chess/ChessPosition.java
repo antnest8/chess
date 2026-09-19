@@ -10,11 +10,13 @@ import java.util.Objects;
  */
 public class ChessPosition {
 
-    private int row;
-    private int col;
+    private final int row;
+    private final int col;
     private ChessPiece piece; //usually null
 
     public ChessPosition(int row, int col) {
+        this.row = row;
+        this.col = col;
     }
 
     /**
@@ -22,8 +24,7 @@ public class ChessPosition {
      * 1 codes for the bottom row
      */
     public int getRow() {
-        //throw new RuntimeException("Not implemented");
-        return 0;
+        return this.row;
     }
 
     public char getRowLetter(){
@@ -36,8 +37,7 @@ public class ChessPosition {
      * 1 codes for the left column
      */
     public int getColumn() {
-        return 0;
-        //throw new RuntimeException("Not implemented");
+        return this.col;
     }
 
     @Override
