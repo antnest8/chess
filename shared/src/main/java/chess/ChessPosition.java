@@ -28,7 +28,6 @@ public class ChessPosition {
     }
 
     public char getRowLetter(){
-        //throw new RuntimeException("Not implemented"); //I prefer the tradition letter representation for strings
         return 'a';
     }
 

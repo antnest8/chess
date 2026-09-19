@@ -15,12 +15,13 @@ public class ChessBoard {
 
 
     public ChessBoard() {
+
         boardSquares = new ChessPosition[8][8];
         int colNum = 1;
-        for(ChessPosition[] col : boardSquares){
+        for(int y = 0; y < 8; y++){
             int rowNum = 1;
-            for(ChessPosition square : col){
-                square = new ChessPosition(rowNum, colNum);
+            for(int x = 0; x < 8; x++){
+                boardSquares[y][x] = new ChessPosition(rowNum, colNum);
                 rowNum++;
             }
             colNum++;
@@ -47,10 +48,11 @@ public class ChessBoard {
     }
 
     public ChessPosition getPosition(ChessPosition target) {
+        /*
         if(!positionExists(target)) {
             throw new ArrayIndexOutOfBoundsException("Position (" + target.getRow() + ", " + target.getColumn() + ") out of bounds!");
         }
-
+        */
         return boardSquares[target.getRow() - 1][target.getColumn() - 1];
     }
 
