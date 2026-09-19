@@ -60,9 +60,14 @@ public class ChessPosition {
     }
 
     public boolean hasPiece() {
+        return piece != null;
     }
 
     public void addPiece(ChessPiece piece){
         this.piece = piece;
+    }
+
+    public ChessPiece getPiece(){
+        return this.piece;
     }
 }
