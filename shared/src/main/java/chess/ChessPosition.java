@@ -22,11 +22,13 @@ public class ChessPosition {
      * 1 codes for the bottom row
      */
     public int getRow() {
-        throw new RuntimeException("Not implemented");
+        //throw new RuntimeException("Not implemented");
+        return 0;
     }
 
     public char getRowLetter(){
-        throw new RuntimeException("Not implemented"); //I prefer the tradition letter representation for strings
+        //throw new RuntimeException("Not implemented"); //I prefer the tradition letter representation for strings
+        return 'a';
     }
 
     /**
@@ -34,7 +36,8 @@ public class ChessPosition {
      * 1 codes for the left column
      */
     public int getColumn() {
-        throw new RuntimeException("Not implemented");
+        return 0;
+        //throw new RuntimeException("Not implemented");
     }
 
     @Override
