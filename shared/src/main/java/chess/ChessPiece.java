@@ -21,13 +21,12 @@ public class ChessPiece {
         this.type = type;
 
         switch(type){
-            case PieceType.PAWN -> moveProvider = new PawnMoves();
             case PieceType.KING -> moveProvider = new KingMoves();
             case PieceType.QUEEN -> moveProvider = new QueenMoves();
             case PieceType.BISHOP -> moveProvider = new BishopMoves();
             case PieceType.KNIGHT -> moveProvider = new KnightMoves();
             case PieceType.ROOK -> moveProvider = new RookMoves();
-            case default -> moveProvider = null;
+            default -> moveProvider = new PawnMoves();
         }
     }
 
@@ -65,7 +64,7 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        return moveProvider.getValidMoves(board, myPosition);
+        return moveProvider.getValidMoves(board, myPosition, pieceColor);
     }
 
     @Override
