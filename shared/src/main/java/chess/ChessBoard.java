@@ -8,7 +8,7 @@ package chess;
  */
 public class ChessBoard {
 
-    private ChessPosition[][] boardSquares; //~ Hold chess positions in an 8x8 grid
+    final private ChessPosition[][] boardSquares; //~ Hold chess positions in an 8x8 grid
 
 
     public ChessBoard() {
@@ -54,8 +54,10 @@ public class ChessBoard {
     }
 
     public boolean positionExists(ChessPosition target) {
+        return (target.getRow() < 9 && target.getRow() > 0) && (target.getColumn() < 9 && target.getColumn() > 0);
     }
 
     public ChessPosition getPosition(ChessPosition target) {
+        return boardSquares[target.getRow() - 1][target.getColumn() - 1];
     }
 }
