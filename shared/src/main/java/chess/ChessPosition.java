@@ -58,4 +58,7 @@ public class ChessPosition {
     public int hashCode(){
         return 13 * Objects.hashCode(toString());
     }
+
+    public boolean hasPiece() {
+    }
 }
