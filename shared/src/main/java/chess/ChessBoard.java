@@ -12,7 +12,16 @@ public class ChessBoard {
 
 
     public ChessBoard() {
-        
+        boardSquares = new ChessPosition[8][8];
+        int colNum = 1;
+        for(ChessPosition[] col : boardSquares){
+            int rowNum = 1;
+            for(ChessPosition square : col){
+                square = new ChessPosition(rowNum, colNum);
+                rowNum++;
+            }
+            colNum++;
+        }
     }
 
     /**
