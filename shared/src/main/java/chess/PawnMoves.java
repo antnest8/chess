@@ -59,6 +59,16 @@ public class PawnMoves implements MoveProvider{
         /*
         ------- Attack --------------------
          */
+        target = new ChessPosition(position.getRow() + colorMult, position.getColumn() + 1);
+        if(board.positionExists(target) && board.getPosition(target).hasPiece() && board.getPiece(target).getTeamColor() != color){
+            moves.add(new ChessMove(position, target, null));
+        }
+
+        target = new ChessPosition(position.getRow() + colorMult, position.getColumn() - 1);
+        if(board.positionExists(target) && board.getPosition(target).hasPiece() && board.getPiece(target).getTeamColor() != color){
+            moves.add(new ChessMove(position, target, null));
+        }
+
 
         return moves;
     }
