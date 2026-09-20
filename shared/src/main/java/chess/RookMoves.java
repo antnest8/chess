@@ -15,8 +15,15 @@ public class RookMoves implements MoveProvider{
             boolean existed = true;
             do{
                 var target = new ChessPosition(position.getRow() + (dir[0] * multiplier), position.getColumn() + (dir[1] * multiplier));
-                if(board.positionExists(target) && !board.getPosition(target).hasPiece()){
-                    moves.add(new ChessMove(position, target, null));
+                if(board.positionExists(target)){
+                    if(board.getPosition(target).hasPiece()){
+                        existed = false;
+                        if(board.getPiece(target).getTeamColor() != color){
+                            moves.add(new ChessMove(position, target, null));
+                        }
+                    } else{
+                        moves.add(new ChessMove(position, target, null));
+                    }
                 } else{
                     existed = false;
                 }
