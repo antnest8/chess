@@ -13,8 +13,14 @@ public class KingMoves implements MoveProvider{
         for(int[] dir : DIRECTIONS){
 
             var target = new ChessPosition(position.getRow() + dir[0], position.getColumn() + dir[1]);
-            if(board.positionExists(target) && !board.getPosition(target).hasPiece()){
-                moves.add(new ChessMove(position, target, null));
+            if(board.positionExists(target)){
+                if(board.getPosition(target).hasPiece()){
+                    if(board.getPiece(target).getTeamColor() != color){
+                        moves.add(new ChessMove(position, target, null));
+                    }
+                } else{
+                    moves.add(new ChessMove(position, target, null));
+                }
             }
         }
 
