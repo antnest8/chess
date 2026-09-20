@@ -36,11 +36,10 @@ public class PawnMoves implements MoveProvider{
         ---------- Basic Forward -------------------------
          */
         var target = new ChessPosition(position.getRow() + (colorMult), position.getColumn());
-        if(promotionRow == target.getRow()){
+        if(promotionRow == target.getRow() && !board.getPosition(target).hasPiece()){
             moves.add(new ChessMove(position, target, ChessPiece.PieceType.BISHOP));
             moves.add(new ChessMove(position, target, ChessPiece.PieceType.ROOK));
             moves.add(new ChessMove(position, target, ChessPiece.PieceType.KNIGHT));
-            moves.add(new ChessMove(position, target, ChessPiece.PieceType.KING));
             moves.add(new ChessMove(position, target, ChessPiece.PieceType.QUEEN));
         }
         else if(!board.getPosition(target).hasPiece()){
@@ -61,12 +60,27 @@ public class PawnMoves implements MoveProvider{
          */
         target = new ChessPosition(position.getRow() + colorMult, position.getColumn() + 1);
         if(board.positionExists(target) && board.getPosition(target).hasPiece() && board.getPiece(target).getTeamColor() != color){
-            moves.add(new ChessMove(position, target, null));
+            if(promotionRow == target.getRow()){
+                moves.add(new ChessMove(position, target, ChessPiece.PieceType.BISHOP));
+                moves.add(new ChessMove(position, target, ChessPiece.PieceType.ROOK));
+                moves.add(new ChessMove(position, target, ChessPiece.PieceType.KNIGHT));
+                moves.add(new ChessMove(position, target, ChessPiece.PieceType.QUEEN));
+            }else{
+                moves.add(new ChessMove(position, target, null));
+            }
+
         }
 
         target = new ChessPosition(position.getRow() + colorMult, position.getColumn() - 1);
         if(board.positionExists(target) && board.getPosition(target).hasPiece() && board.getPiece(target).getTeamColor() != color){
-            moves.add(new ChessMove(position, target, null));
+            if(promotionRow == target.getRow()){
+                moves.add(new ChessMove(position, target, ChessPiece.PieceType.BISHOP));
+                moves.add(new ChessMove(position, target, ChessPiece.PieceType.ROOK));
+                moves.add(new ChessMove(position, target, ChessPiece.PieceType.KNIGHT));
+                moves.add(new ChessMove(position, target, ChessPiece.PieceType.QUEEN));
+            }else{
+                moves.add(new ChessMove(position, target, null));
+            }
         }
 
 
