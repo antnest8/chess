@@ -5,8 +5,8 @@ import java.util.Collection;
 
 public class QueenMoves implements MoveProvider{
 
-    private MoveProvider rookMoves = new RookMoves();
-    private MoveProvider bishopMoves = new BishopMoves();
+    private final MoveProvider rookMoves = new RookMoves();
+    private final MoveProvider bishopMoves = new BishopMoves();
 
     public Collection<ChessMove> getValidMoves(ChessBoard board, ChessPosition position, ChessGame.TeamColor color){
 
