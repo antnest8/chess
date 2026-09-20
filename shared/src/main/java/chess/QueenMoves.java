@@ -5,27 +5,14 @@ import java.util.Collection;
 
 public class QueenMoves implements MoveProvider{
 
-    private final int[][] DIRECTIONS = {{1, 0}, {-1, 0}, {0, -1}, {0, 1}};
+    private MoveProvider rookMoves = new RookMoves();
+    private MoveProvider bishopMoves = new BishopMoves();
 
-    public Collection<ChessMove> getValidMoves(ChessBoard board, ChessPosition position){
-        var moves = new ArrayList<ChessMove>();
+    public Collection<ChessMove> getValidMoves(ChessBoard board, ChessPosition position, ChessGame.TeamColor color){
 
-        for(int[] dir : DIRECTIONS){
-            int multiplier = 1;
-            boolean existed = true;
-            do{
-                var target = new ChessPosition(position.getRow() + (dir[0] * multiplier), position.getColumn() + (dir[1] * multiplier));
-                if(board.positionExists(target) && !board.getPosition(target).hasPiece()){
-                    moves.add(new ChessMove(position, target, null));
-                } else{
-                    existed = false;
-                }
-
-                multiplier++;
-            }while(existed);
-        }
-
-        return moves;
+        Collection<ChessMove> results = bishopMoves.getValidMoves(board, position, color);
+        results.addAll(rookMoves.getValidMoves(board, position, color));
+        return results;
     }
 
 }
