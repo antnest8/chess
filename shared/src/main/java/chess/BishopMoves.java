@@ -16,7 +16,7 @@ public class BishopMoves implements MoveProvider{
             do{
                 var target = new ChessPosition(position.getRow() + (dir[0] * multiplier), position.getColumn() + (dir[1] * multiplier));
                 if(board.positionExists(target)){
-                    if(board.getPosition(target).hasPiece()){
+                    if(board.hasPiece(target)){
                         existed = false;
                         if(board.getPiece(target).getTeamColor() != color){
                             moves.add(new ChessMove(position, target, null));

@@ -46,6 +46,10 @@ public class ChessBoard {
         return getPosition(position).getPiece();
     }
 
+    public boolean hasPiece(ChessPosition position){
+        return getPosition(position).hasPiece();
+    }
+
     public boolean positionExists(ChessPosition target) {
         return (target.getRow() < 9 && target.getRow() > 0) && (target.getColumn() < 9 && target.getColumn() > 0);
     }

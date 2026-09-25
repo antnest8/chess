@@ -36,13 +36,13 @@ public class PawnMoves implements MoveProvider{
         ---------- Basic Forward -------------------------
          */
         var target = new ChessPosition(position.getRow() + (colorMult), position.getColumn());
-        if(promotionRow == target.getRow() && !board.getPosition(target).hasPiece()){
+        if(promotionRow == target.getRow() && !board.hasPiece(target)){
             moves.add(new ChessMove(position, target, ChessPiece.PieceType.BISHOP));
             moves.add(new ChessMove(position, target, ChessPiece.PieceType.ROOK));
             moves.add(new ChessMove(position, target, ChessPiece.PieceType.KNIGHT));
             moves.add(new ChessMove(position, target, ChessPiece.PieceType.QUEEN));
         }
-        else if(!board.getPosition(target).hasPiece()){
+        else if(!board.hasPiece(target)){
             moves.add(new ChessMove(position, target, null));
         }
 
@@ -51,7 +51,7 @@ public class PawnMoves implements MoveProvider{
          */
         target = new ChessPosition(position.getRow() + (colorMult * 2), position.getColumn());
         var path = new ChessPosition(position.getRow() + (colorMult), position.getColumn());
-        if(position.getRow() == startingRow && !board.getPosition(target).hasPiece() && !board.getPosition(path).hasPiece()){
+        if(position.getRow() == startingRow && !board.hasPiece(target) && !board.hasPiece(path)){
             moves.add(new ChessMove(position, target, null));
         }
 
@@ -59,7 +59,7 @@ public class PawnMoves implements MoveProvider{
         ------- Attack --------------------
          */
         target = new ChessPosition(position.getRow() + colorMult, position.getColumn() + 1);
-        if(board.positionExists(target) && board.getPosition(target).hasPiece() && board.getPiece(target).getTeamColor() != color){
+        if(board.positionExists(target) && board.hasPiece(target) && board.getPiece(target).getTeamColor() != color){
             if(promotionRow == target.getRow()){
                 moves.add(new ChessMove(position, target, ChessPiece.PieceType.BISHOP));
                 moves.add(new ChessMove(position, target, ChessPiece.PieceType.ROOK));
@@ -72,7 +72,7 @@ public class PawnMoves implements MoveProvider{
         }
 
         target = new ChessPosition(position.getRow() + colorMult, position.getColumn() - 1);
-        if(board.positionExists(target) && board.getPosition(target).hasPiece() && board.getPiece(target).getTeamColor() != color){
+        if(board.positionExists(target) && board.hasPiece(target) && board.getPiece(target).getTeamColor() != color){
             if(promotionRow == target.getRow()){
                 moves.add(new ChessMove(position, target, ChessPiece.PieceType.BISHOP));
                 moves.add(new ChessMove(position, target, ChessPiece.PieceType.ROOK));
