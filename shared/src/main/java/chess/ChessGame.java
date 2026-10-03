@@ -87,11 +87,15 @@ public class ChessGame {
      */
     public boolean isInCheck(TeamColor teamColor) {
         ChessPosition king = getKingPosition(teamColor);
+        return isInDanger(teamColor, king);
+    }
+
+    public boolean isInDanger(TeamColor teamColor, ChessPosition target){
         if(board.findMatch((position) -> {
             if(position.hasPiece() && position.getPiece().getTeamColor() != teamColor){
                 Collection<ChessMove> moves = position.getPiece().pieceMoves(board, position);
                 for (var move : moves){
-                    if(move.getEndPosition().equals(king)){
+                    if(move.getEndPosition().equals(target)){
                         return true;
                     }
                 }
