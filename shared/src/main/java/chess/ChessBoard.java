@@ -50,6 +50,10 @@ public class ChessBoard {
         return getPosition(position).hasPiece();
     }
 
+    public void removePiece(ChessPosition position){
+        addPiece(position, null);
+    }
+
     public boolean positionExists(ChessPosition target) {
         return (target.getRow() < 9 && target.getRow() > 0) && (target.getColumn() < 9 && target.getColumn() > 0);
     }
