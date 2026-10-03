@@ -50,7 +50,15 @@ public class ChessGame {
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
         if(startPosition.hasPiece()){
-            return startPosition.getPiece().pieceMoves(board, startPosition); //TODO: check for kingcheck.
+            ChessPiece piece = startPosition.getPiece();
+            Collection<ChessMove> pieceMoves = piece.pieceMoves(board, startPosition);
+
+            //if king thin out moves that go into a checked position
+            if(piece.getPieceType() == ChessPiece.PieceType.KING){
+                pieceMoves.removeIf(move -> isInDanger(piece.getTeamColor(), move.getEndPosition()));
+            }
+
+            return pieceMoves;
             //TODO: add al pasant and castling.
         }else{
             return null;
