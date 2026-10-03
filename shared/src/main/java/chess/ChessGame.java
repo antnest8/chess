@@ -50,7 +50,8 @@ public class ChessGame {
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
         if(startPosition.hasPiece()){
-            return startPosition.getPiece().pieceMoves(board, startPosition);
+            return startPosition.getPiece().pieceMoves(board, startPosition); //TODO: check for kingcheck.
+            //TODO: add al pasant and castling.
         }else{
             return null;
         }
