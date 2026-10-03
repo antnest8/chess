@@ -2,6 +2,7 @@ package chess;
 
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.function.Predicate;
 
 /**
  * A chessboard that can hold and rearrange chess pieces.
@@ -50,9 +51,7 @@ public class ChessBoard {
         return getPosition(position).hasPiece();
     }
 
-    public void removePiece(ChessPosition position){
-        addPiece(position, null);
-    }
+
 
     public boolean positionExists(ChessPosition target) {
         return (target.getRow() < 9 && target.getRow() > 0) && (target.getColumn() < 9 && target.getColumn() > 0);
@@ -64,6 +63,17 @@ public class ChessBoard {
         }
 
         return boardSquares[target.getRow() - 1][target.getColumn() - 1];
+    }
+
+    public ChessPosition findMatch(Predicate<ChessPosition> test){
+        for(int y = 0; y < 8; y++){
+            for(int x = 0; x < 8; x++){
+                if(test.test(boardSquares[y][x])){
+                    return boardSquares[y][x];
+                }
+            }
+        }
+        return null;
     }
 
     /*
@@ -80,6 +90,9 @@ public class ChessBoard {
         getPosition(position).addPiece(piece);
     }
 
+    public void removePiece(ChessPosition position){
+        addPiece(position, null);
+    }
 
     /**
      * Sets the board to the default starting board
