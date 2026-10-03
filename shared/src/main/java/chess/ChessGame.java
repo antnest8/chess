@@ -144,13 +144,8 @@ public class ChessGame {
 
     public ChessPiece getTeamKing(TeamColor color){
         return board.findMatch((position) -> {
-            if(position.hasPiece() && position.getPiece().getPieceType() == ChessPiece.PieceType.KING
-            && position.getPiece().getTeamColor() == color){
-
-                return true;
-            }else{
-                return false;
-            }
+            return position.hasPiece() && position.getPiece().getPieceType() == ChessPiece.PieceType.KING
+                    && position.getPiece().getTeamColor() == color;
         }).getPiece();
     }
 }
