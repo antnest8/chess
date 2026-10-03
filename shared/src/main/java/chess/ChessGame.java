@@ -86,7 +86,8 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        //TODO:expose a findMatch() method to ChessBoard that allows passing in a lambda
+        return true;
     }
 
     /**
@@ -96,7 +97,12 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        if(isInCheck(teamColor) && getTeamKing(teamColor).pieceMoves().isEmpty()){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     /**
