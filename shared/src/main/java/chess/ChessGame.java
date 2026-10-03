@@ -133,4 +133,12 @@ public class ChessGame {
     public ChessBoard getBoard() {
         throw new RuntimeException("Not implemented");
     }
+
+    public TeamColor otherTeam(TeamColor color){
+        if(color == TeamColor.BLACK) {
+            return TeamColor.WHITE;
+        }else {
+            return TeamColor.BLACK;
+        }
+    }
 }
