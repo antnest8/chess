@@ -162,6 +162,8 @@ public class ChessGame {
         return board;
     }
 
+
+    //TODO: if this function is not used... remove it.
     public TeamColor otherTeam(TeamColor color){
         if(color == TeamColor.BLACK) {
             return TeamColor.WHITE;
