@@ -12,6 +12,7 @@ public class ChessGame {
 
     private TeamColor currentTurn;
     private ChessBoard board;
+    private ChessPiece lastRemovedPiece;
 
     public ChessGame() {
     }
@@ -73,16 +74,35 @@ public class ChessGame {
         if(!validMoves(move.getStartPosition()).contains(move)){
             throw new InvalidMoveException("Not a valid move");
         }
+
+        //keep track of removed pieces for undoing (you will see later)
+        if(board.hasPiece(move.getEndPosition())){
+            lastRemovedPiece = board.getPiece(move.getEndPosition());
+        }
+
         //place piece on square
-        //TODO: keep track of captured pieces
         if(move.getPromotionPiece() != null){
             board.addPiece(move.getEndPosition(), new ChessPiece(getTeamTurn(), move.getPromotionPiece()));
         }else{
-            board.addPiece(move.getEndPosition(), move.getStartPosition().getPiece());
+            board.addPiece(move.getEndPosition(), board.getPiece(move.getStartPosition()));
         }
 
         //remove piece from start
         board.removePiece(move.getStartPosition());
+    }
+
+    private void undoLastMove(ChessMove move){
+        if(move.getPromotionPiece() != null){
+            board.addPiece(move.getStartPosition(), new ChessPiece(getTeamTurn(), ChessPiece.PieceType.PAWN));
+        }else{
+            board.addPiece(move.getStartPosition(), board.getPiece(move.getEndPosition()));
+        }
+        if(lastRemovedPiece != null){
+            board.addPiece(move.getEndPosition(), lastRemovedPiece);
+            lastRemovedPiece = null;
+        }else{
+            board.removePiece(move.getEndPosition());
+        }
     }
 
     /**
