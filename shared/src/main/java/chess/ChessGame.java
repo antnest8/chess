@@ -1,6 +1,7 @@
 package chess;
 
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * A class that can manage a chess game, making moves on a board
@@ -192,9 +193,8 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        return board.findMatch((position) -> {
-            return position.hasPiece() && position.getPiece().getTeamColor() == teamColor && !validMoves(position).isEmpty();
-        }) == null;
+        return !isInCheckmate(teamColor) && board.findMatch((position) -> position.hasPiece() && position.getPiece().getTeamColor() == teamColor && !validMoves(position).isEmpty()
+        ) == null;
     }
 
     /**
@@ -231,4 +231,24 @@ public class ChessGame {
                     && position.getPiece().getTeamColor() == color;
         });
     }
+
+    @Override
+    public String toString(){
+        return "Current Turn:" + currentTurn +"\nBoard: \n" + board.toString();
+    };
+
+    @Override
+    public int hashCode(){
+        return Objects.hashCode(toString()) * 31;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof ChessGame that) {
+            return toString().equals(that.toString());
+        }else {
+            return false;
+        }
+    }
 }
+
