@@ -96,6 +96,8 @@ public class ChessGame {
 
         //remove piece from start
         board.removePiece(move.getStartPosition());
+
+        setTeamTurn(otherTeam(currentTurn)); //apparently the tests call for this?
     }
 
     private void testMove(ChessMove move){
