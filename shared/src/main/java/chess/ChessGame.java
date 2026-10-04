@@ -15,6 +15,9 @@ public class ChessGame {
     private ChessPiece lastRemovedPiece;
 
     public ChessGame() {
+        board = new ChessBoard();
+        board.resetBoard();
+        currentTurn = TeamColor.WHITE;
     }
 
     /**
