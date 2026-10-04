@@ -63,9 +63,6 @@ public class ChessGame {
                 return result;
             });
 
-            if(pieceMoves.isEmpty()){
-                return null;
-            }
 
             return pieceMoves;
             //TODO: add al pasant and castling.
@@ -81,7 +78,7 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        if(!validMoves(move.getStartPosition()).contains(move)){
+        if(!board.hasPiece(move.getStartPosition()) || !validMoves(move.getStartPosition()).contains(move)){
             throw new InvalidMoveException("Not a valid move");
         }
 
