@@ -13,7 +13,7 @@ public class ChessPosition {
     private final int row;
     private final int col;
     private ChessPiece piece; //usually null
-    private final char[] ROWCHARS = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
+    private final char[] COLCHARS = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
 
     public ChessPosition(int row, int col) {
         this.row = row;
@@ -28,8 +28,8 @@ public class ChessPosition {
         return this.row;
     }
 
-    public char getRowLetter(){
-        return ROWCHARS[row - 1];
+    public char getColLetter(){
+        return COLCHARS[col - 1];
     }
 
     /**
@@ -42,7 +42,7 @@ public class ChessPosition {
 
     @Override
     public String toString(){
-        return "Position=(" + getRowLetter() + getColumn() + ")";
+        return "Position=(" + getColLetter() + getRow() + ")";
     }
 
     @Override
