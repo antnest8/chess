@@ -168,8 +168,14 @@ public class ChessGame {
     public boolean isInCheckmate(TeamColor teamColor) {
 
         if(isInCheck(teamColor)){
-            ChessPosition king = getKingPosition(teamColor);
-            if(king.getPiece().pieceMoves(board, king).isEmpty()) {return true;}
+            //if null (fails to find a piece with moves that uncheck the king) return true
+            return null == board.findMatch((position) -> {
+                if(position.hasPiece() && position.getPiece().getTeamColor() == teamColor){
+                    return !validMoves(position).isEmpty();
+                }else{
+                    return false;
+                }
+            });
         }
 
         return false;
