@@ -51,12 +51,10 @@ public class ChessGame {
         ChessPosition square = board.getPosition(startPosition);
         if(square.hasPiece()){
             ChessPiece piece = square.getPiece();
+
             Collection<ChessMove> pieceMoves = piece.pieceMoves(board, square);
 
-            //if king thin out moves that go into a checked position
-            if(piece.getPieceType() == ChessPiece.PieceType.KING){
-                pieceMoves.removeIf(move -> isInDanger(piece.getTeamColor(), move.getEndPosition()));
-            }
+
 
             return pieceMoves;
             //TODO: add al pasant and castling.
@@ -95,15 +93,11 @@ public class ChessGame {
      */
     public boolean isInCheck(TeamColor teamColor) {
         ChessPosition king = getKingPosition(teamColor);
-        return isInDanger(teamColor, king);
-    }
-
-    public boolean isInDanger(TeamColor teamColor, ChessPosition target){
         if(board.findMatch((position) -> {
             if(position.hasPiece() && position.getPiece().getTeamColor() != teamColor){
                 Collection<ChessMove> moves = position.getPiece().pieceMoves(board, position);
                 for (var move : moves){
-                    if(move.getEndPosition().equals(target)){
+                    if(move.getEndPosition().equals(king)){
                         return true;
                     }
                 }
@@ -114,6 +108,7 @@ public class ChessGame {
         }
         return false;
     }
+
 
     /**
      * Determines if the given team is in checkmate
