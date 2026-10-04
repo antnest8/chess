@@ -20,14 +20,10 @@ public class ChessBoard {
     public ChessBoard() {
 
         boardSquares = new ChessPosition[8][8];
-        int colNum = 1;
         for(int y = 0; y < 8; y++){
-            int rowNum = 1;
             for(int x = 0; x < 8; x++){
-                boardSquares[y][x] = new ChessPosition(rowNum, colNum);
-                rowNum++;
+                boardSquares[y][x] = new ChessPosition(y+1, x+1);
             }
-            colNum++;
         }
     }
 

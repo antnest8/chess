@@ -63,7 +63,9 @@ public class ChessGame {
                 return result;
             });
 
-
+            if(pieceMoves.isEmpty()){
+                return null;
+            }
 
             return pieceMoves;
             //TODO: add al pasant and castling.
