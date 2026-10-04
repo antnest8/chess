@@ -14,7 +14,6 @@ public class ChessGame {
     private ChessBoard board;
 
     public ChessGame() {
-        board = new ChessBoard();
     }
 
     /**
@@ -49,9 +48,10 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        if(startPosition.hasPiece()){
-            ChessPiece piece = startPosition.getPiece();
-            Collection<ChessMove> pieceMoves = piece.pieceMoves(board, startPosition);
+        ChessPosition square = board.getPosition(startPosition);
+        if(square.hasPiece()){
+            ChessPiece piece = square.getPiece();
+            Collection<ChessMove> pieceMoves = piece.pieceMoves(board, square);
 
             //if king thin out moves that go into a checked position
             if(piece.getPieceType() == ChessPiece.PieceType.KING){
