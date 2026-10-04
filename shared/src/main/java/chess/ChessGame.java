@@ -52,8 +52,16 @@ public class ChessGame {
         ChessPosition square = board.getPosition(startPosition);
         if(square.hasPiece()){
             ChessPiece piece = square.getPiece();
-
             Collection<ChessMove> pieceMoves = piece.pieceMoves(board, square);
+
+            //AHHH it hurts my eyes!
+            //doing the move, checking if it breaks the game and then undoing it before filtering.
+            pieceMoves.removeIf((move) -> {
+                testMove(move);
+                boolean result = isInCheck(piece.getTeamColor());
+                undoLastMove(move);
+                return result;
+            });
 
 
 
@@ -89,6 +97,24 @@ public class ChessGame {
 
         //remove piece from start
         board.removePiece(move.getStartPosition());
+    }
+
+    private void testMove(ChessMove move){
+        //keep track of removed pieces for undoing (you will see later)
+        if(board.hasPiece(move.getEndPosition())){
+            lastRemovedPiece = board.getPiece(move.getEndPosition());
+        }
+
+        //place piece on square
+        if(move.getPromotionPiece() != null){
+            board.addPiece(move.getEndPosition(), new ChessPiece(getTeamTurn(), move.getPromotionPiece()));
+        }else{
+            board.addPiece(move.getEndPosition(), board.getPiece(move.getStartPosition()));
+        }
+
+        //remove piece from start
+        board.removePiece(move.getStartPosition());
+
     }
 
     private void undoLastMove(ChessMove move){
