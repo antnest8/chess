@@ -6,10 +6,10 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MemoryGameDAO {
+public class MemoryGameDAO implements GameDAO{
     Map<Integer, GameData> data;
 
-    MemoryGameDAO(){
+    public MemoryGameDAO(){
         this.data = new HashMap<Integer, GameData>();
     }
 
