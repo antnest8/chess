@@ -35,10 +35,13 @@ public class ChessService {
 
     public String login(String body) throws DataAccessException {
         LoginAttempt login = new Gson().fromJson(body, LoginAttempt.class);
-        userData.userPassCorrect(login);
-        AuthData auth = new AuthData(UUID.randomUUID().toString(), login.username());
-        authData.addAuth(auth);
-        return new Gson().toJson(auth);
+        if(userData.userPassCorrect(login)){
+            AuthData auth = new AuthData(UUID.randomUUID().toString(), login.username());
+            authData.addAuth(auth);
+            return new Gson().toJson(auth);
+        } else{
+            throw new LoginIncorrect("Error: unauthorized");
+        }
     }
 
     public boolean tokenValid(String token){

@@ -2,6 +2,7 @@ package server;
 
 import com.google.gson.Gson;
 import dataaccess.DataAccessException;
+import dataaccess.LoginIncorrect;
 import dataaccess.UsernameTakenException;
 import io.javalin.*;
 import io.javalin.http.Context;
@@ -50,16 +51,22 @@ public class Server {
             ctx.result(service.register(ctx.body()));
         } catch (UsernameTakenException ex){
             ctx.status(403);
-            ctx.result(new Gson().toJson(ex));
+            ctx.result(new Gson().toJson(Map.of("message",ex)));
         } catch (DataAccessException ex) {
             ctx.status(400);
-            ctx.result(new Gson().toJson(ex));
+            ctx.result(new Gson().toJson(Map.of("message",ex)));
         }
     }
 
     private void login(Context ctx){
         try{
             ctx.result(service.login(ctx.body()));
+        } catch (LoginIncorrect ex){
+            ctx.status(401);
+            ctx.result(new Gson().toJson(Map.of("message", ex)));
+        } catch (DataAccessException ex){
+            ctx.status(400);
+            ctx.result(new Gson().toJson(Map.of("message",ex)));
         }
     }
     private void logout(Context ctx){
