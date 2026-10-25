@@ -45,4 +45,15 @@ public class Server {
     private void register(Context ctx){
         var body = new Gson().fromJson(ctx.body(), Map.class);
     }
+
+    private void login(Context ctx){
+    }
+    private void logout(Context ctx){
+    }
+    private void listGames(Context ctx){
+    }
+    private void createGame(Context ctx){
+    }
+    private void joinGame(Context ctx){
+    }
 }
