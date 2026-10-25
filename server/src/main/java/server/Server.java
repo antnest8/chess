@@ -54,10 +54,10 @@ public class Server {
             ctx.result(service.register(ctx.body()));
         } catch (UsernameTakenException ex){
             ctx.status(403);
-            ctx.result(new Gson().toJson(Map.of("message",ex)));
+            ctx.result(new Gson().toJson(Map.of("message", ex.getMessage())));
         } catch (DataAccessException ex) {
             ctx.status(400);
-            ctx.result(new Gson().toJson(Map.of("message",ex)));
+            ctx.result(new Gson().toJson(Map.of("message", ex.getMessage())));
         }
     }
 
@@ -66,10 +66,10 @@ public class Server {
             ctx.result(service.login(ctx.body()));
         } catch (LoginIncorrect ex){
             ctx.status(401);
-            ctx.result(new Gson().toJson(Map.of("message", ex)));
+            ctx.result(new Gson().toJson(Map.of("message", ex.getMessage())));
         } catch (DataAccessException ex){
             ctx.status(400);
-            ctx.result(new Gson().toJson(Map.of("message",ex)));
+            ctx.result(new Gson().toJson(Map.of("message", ex.getMessage())));
         }
     }
     private void logout(Context ctx){
@@ -95,7 +95,7 @@ public class Server {
                 ctx.result(new Gson().toJson(Map.of("gameID", service.createGame(ctx.body()))));
             } catch (DataAccessException ex){
                 ctx.status(400);
-                ctx.result(new Gson().toJson(Map.of("message",ex)));
+                ctx.result(new Gson().toJson(Map.of("message", ex.getMessage())));
             }
         } else{
             ctx.status(401);
@@ -108,10 +108,10 @@ public class Server {
                 service.joinGame(ctx.body(), ctx.header("Authorization"));
             } catch (GameSpaceTaken ex){
                 ctx.status(403);
-                ctx.result(new Gson().toJson(Map.of("message",ex)));
+                ctx.result(new Gson().toJson(Map.of("message", ex.getMessage())));
             } catch(DataAccessException ex){
                 ctx.status(400);
-                ctx.result(new Gson().toJson(Map.of("message",ex)));
+                ctx.result(new Gson().toJson(Map.of("message", ex.getMessage())));
             }
         } else{
             ctx.status(401);
@@ -133,7 +133,7 @@ public class Server {
 
     private void runtimeHandler(RuntimeException ex, Context ctx){
         ctx.status(500);
-        ctx.result(new Gson().toJson(Map.of("message", ex)));
+        ctx.result(new Gson().toJson(Map.of("message", ex.getMessage())));
     }
 
 }
