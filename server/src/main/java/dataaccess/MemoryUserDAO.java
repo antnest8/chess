@@ -9,7 +9,7 @@ import java.util.Map;
 public class MemoryUserDAO implements UserDAO{
     private Map<String, UserData> data;
 
-    MemoryUserDAO(){
+    public MemoryUserDAO(){
         this.data = new HashMap<String, UserData>();
     }
 
