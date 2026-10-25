@@ -7,4 +7,5 @@ public interface AuthDAO {
     public boolean authValid(String authToken);
     public void deleteAuth(String authToken);
     public void addAuth(AuthData data);
+    public AuthData getAuth(String authToken);
 }

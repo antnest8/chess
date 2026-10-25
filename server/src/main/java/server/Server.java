@@ -2,6 +2,7 @@ package server;
 
 import com.google.gson.Gson;
 import dataaccess.DataAccessException;
+import dataaccess.GameSpaceTaken;
 import dataaccess.LoginIncorrect;
 import dataaccess.UsernameTakenException;
 import io.javalin.*;
@@ -100,6 +101,17 @@ public class Server {
         }
     }
     private void joinGame(Context ctx){
+        if(authorized(ctx)){
+            try{
+                service.joinGame(ctx.body(), ctx.header("Authorization"));
+            } catch (GameSpaceTaken ex){
+                ctx.status(403);
+                ctx.result(new Gson().toJson(Map.of("message",ex)));
+            }
+        } else{
+            ctx.status(401);
+            ctx.result(new Gson().toJson(Map.of("message", "unauthorized")));
+        }
     }
 
     private boolean authorized(Context ctx){

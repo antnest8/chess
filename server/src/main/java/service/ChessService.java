@@ -56,12 +56,35 @@ public class ChessService {
     }
 
     public int createGame(String body) throws DataAccessException{
-        var name = new Gson().fromJson(body, Map.class);
-        return gameData.createGame(name.get("gameName").toString());
+        var name = new Gson().fromJson(body, GameData.class);
+        return gameData.createGame(name.gameName());
     }
 
     public boolean tokenValid(String token){
         return authData.authValid(token);
+    }
+
+    public void joinGame(String body, String token) throws DataAccessException{
+        var req = new Gson().fromJson(body, Map.class);
+        var game = gameData.getGame(Integer.getInteger(req.get("gameID").toString()));
+        String color = req.get("playerColor").toString();
+        var auth = authData.getAuth(token);
+
+        if(!color.equals("BLACK") && !color.equals("WHITE")){
+            throw new DataAccessException("Error: bad request");
+        } else{
+            if(color.equals("WHITE")){
+                if(game.whiteUsername() != null){
+                    throw new GameSpaceTaken("Error: already taken");
+                }
+                gameData.updateGame(new GameData(game.gameID(), auth.userName(), game.blackUsername(), game.gameName(), game.game()));
+            } else if(color.equals("BLACK")){
+                if(game.blackUsername() != null){
+                    throw new GameSpaceTaken("Error: already taken");
+                }
+                gameData.updateGame(new GameData(game.gameID(), game.whiteUsername(), auth.userName(), game.gameName(), game.game()));
+            }
+        }
     }
 
 }
