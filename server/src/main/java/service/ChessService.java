@@ -3,9 +3,12 @@ package service;
 import com.google.gson.Gson;
 import dataaccess.*;
 import model.AuthData;
+import model.GameData;
 import model.LoginAttempt;
 import model.UserData;
 
+import java.util.Collection;
+import java.util.Map;
 import java.util.UUID;
 
 public class ChessService {
@@ -46,6 +49,15 @@ public class ChessService {
 
     public void logout(String token){
         authData.deleteAuth(token);
+    }
+
+    public String listGames(){
+        return new Gson().toJson(gameData.listGames());
+    }
+
+    public int createGame(String body) throws DataAccessException{
+        var name = new Gson().fromJson(body, Map.class);
+        return gameData.createGame(name.get("gameName").toString());
     }
 
     public boolean tokenValid(String token){

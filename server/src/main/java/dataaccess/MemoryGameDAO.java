@@ -7,14 +7,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MemoryGameDAO implements GameDAO{
-    Map<Integer, GameData> data;
+    private Map<Integer, GameData> data;
+    private int count;
 
     public MemoryGameDAO(){
         this.data = new HashMap<Integer, GameData>();
+        this.count = 0;
     }
 
-    public void createGame(GameData game){
+    public int createGame(String gameName){
+        var game = new GameData(++count, null, null, gameName, null);
         data.put(game.gameID(), game);
+        return game.gameID();
     }
     public GameData getGame(int gameID){
         return data.get(gameID);

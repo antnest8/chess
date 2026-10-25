@@ -74,13 +74,30 @@ public class Server {
             service.logout(ctx.body());
         } else{
             ctx.status(401);
-            ctx.result(new Gson().toJson(Map.of("message:", "unauthorized")));
+            ctx.result(new Gson().toJson(Map.of("message", "unauthorized")));
         }
 
     }
     private void listGames(Context ctx){
+        if(authorized(ctx)){
+            ctx.result(new Gson().toJson(Map.of("games", service.listGames())));
+        } else{
+            ctx.status(401);
+            ctx.result(new Gson().toJson(Map.of("message", "unauthorized")));
+        }
     }
     private void createGame(Context ctx){
+        if(authorized(ctx)){
+            try{
+                ctx.result(new Gson().toJson(Map.of("gameID", service.createGame(ctx.body()))));
+            } catch (DataAccessException ex){
+                ctx.status(400);
+                ctx.result(new Gson().toJson(Map.of("message",ex)));
+            }
+        } else{
+            ctx.status(401);
+            ctx.result(new Gson().toJson(Map.of("message", "unauthorized")));
+        }
     }
     private void joinGame(Context ctx){
     }
