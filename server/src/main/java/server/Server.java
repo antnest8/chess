@@ -28,4 +28,6 @@ public class Server {
     public void stop() {
         javalin.stop();
     }
+
+
 }
