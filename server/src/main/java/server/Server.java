@@ -47,7 +47,7 @@ public class Server {
 
     private void register(Context ctx){
         try{
-            var res = service.register(ctx.body());
+            ctx.result(service.register(ctx.body()));
         } catch (UsernameTakenException ex){
             ctx.status(403);
             ctx.result(new Gson().toJson(ex));
@@ -58,7 +58,9 @@ public class Server {
     }
 
     private void login(Context ctx){
-
+        try{
+            ctx.result(service.login(ctx.body()));
+        }
     }
     private void logout(Context ctx){
     }
