@@ -44,15 +44,15 @@ public class Server {
     }
 
     private void register(Context ctx){
-        var body = new Gson().fromJson(ctx.body(), Map.class);
         try{
-            var res = service.register(body);
+            var res = service.register(ctx.body());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
     private void login(Context ctx){
+
     }
     private void logout(Context ctx){
     }

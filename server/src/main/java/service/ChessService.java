@@ -1,6 +1,8 @@
 package service;
 
+import com.google.gson.Gson;
 import dataaccess.*;
+import model.UserData;
 
 public class ChessService {
     private GameDAO gameData;
@@ -17,5 +19,11 @@ public class ChessService {
         gameData.clear();
         userData.clear();
         authData.clear();
+    }
+
+    public String register(String body) throws DataAccessException {
+        UserData user = new Gson().fromJson(body, UserData.class);
+        userData.createUser(user);
+        return new Gson().toJson(user);
     }
 }
