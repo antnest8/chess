@@ -10,6 +10,7 @@ import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import service.ChessService;
 
+import javax.xml.crypto.Data;
 import java.util.Map;
 
 public class Server {
@@ -106,6 +107,9 @@ public class Server {
                 service.joinGame(ctx.body(), ctx.header("Authorization"));
             } catch (GameSpaceTaken ex){
                 ctx.status(403);
+                ctx.result(new Gson().toJson(Map.of("message",ex)));
+            } catch(DataAccessException ex){
+                ctx.status(400);
                 ctx.result(new Gson().toJson(Map.of("message",ex)));
             }
         } else{
