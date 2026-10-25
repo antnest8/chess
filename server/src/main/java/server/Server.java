@@ -70,6 +70,13 @@ public class Server {
         }
     }
     private void logout(Context ctx){
+        if(authorized(ctx)){
+            service.logout(ctx.body());
+        } else{
+            ctx.status(401);
+            ctx.result(new Gson().toJson(Map.of("message:", "unauthorized")));
+        }
+
     }
     private void listGames(Context ctx){
     }

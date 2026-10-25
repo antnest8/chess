@@ -44,6 +44,10 @@ public class ChessService {
         }
     }
 
+    public void logout(String token){
+        authData.deleteAuth(token);
+    }
+
     public boolean tokenValid(String token){
         return authData.authValid(token);
     }
