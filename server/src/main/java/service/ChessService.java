@@ -26,4 +26,8 @@ public class ChessService {
         userData.createUser(user);
         return new Gson().toJson(user);
     }
+
+    public boolean tokenValid(String token){
+        return authData.authValid(token);
+    }
 }
