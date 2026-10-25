@@ -38,6 +38,9 @@ public class ChessService {
 
     public String login(String body) throws DataAccessException {
         LoginAttempt login = new Gson().fromJson(body, LoginAttempt.class);
+        if(login.username() == null || login.password() == null){
+            throw new DataAccessException("Error: bad request");
+        }
         if(userData.userPassCorrect(login)){
             AuthData auth = new AuthData(UUID.randomUUID().toString(), login.username());
             authData.addAuth(auth);

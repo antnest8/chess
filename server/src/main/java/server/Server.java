@@ -131,7 +131,7 @@ public class Server {
         }
     }
 
-    private void runtimeHandler(Context ctx, RuntimeException ex){
+    private void runtimeHandler(RuntimeException ex, Context ctx){
         ctx.status(500);
         ctx.result(new Gson().toJson(Map.of("message", ex)));
     }
