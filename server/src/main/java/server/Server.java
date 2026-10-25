@@ -63,4 +63,16 @@ public class Server {
     private void joinGame(Context ctx){
     }
 
+    private boolean authorized(Context ctx){
+        String authToken = ctx.header("Authorization");
+        if(!service.tokenValid(authToken)){
+            ctx.contentType("application/json");
+            ctx.status(401);
+            ctx.result(new Gson().toJson(Map.of("message", "Error: Unauthorized")));
+            return false;
+        }else{
+            return true;
+        }
+    }
+
 }
