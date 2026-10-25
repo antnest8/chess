@@ -3,6 +3,7 @@ package server;
 import com.google.gson.Gson;
 import io.javalin.*;
 import io.javalin.http.Context;
+import io.javalin.http.Handler;
 import service.ChessService;
 
 import java.util.Map;
@@ -38,12 +39,17 @@ public class Server {
     }
 
     private void clear(Context ctx){
-        //service.clear();
+        service.clear();
         ctx.status(200);
     }
 
     private void register(Context ctx){
         var body = new Gson().fromJson(ctx.body(), Map.class);
+        try{
+            var res = service.register(body);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void login(Context ctx){
@@ -56,4 +62,5 @@ public class Server {
     }
     private void joinGame(Context ctx){
     }
+
 }
