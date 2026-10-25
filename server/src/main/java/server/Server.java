@@ -2,6 +2,7 @@ package server;
 
 import com.google.gson.Gson;
 import dataaccess.DataAccessException;
+import dataaccess.UsernameTakenException;
 import io.javalin.*;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
@@ -47,8 +48,12 @@ public class Server {
     private void register(Context ctx){
         try{
             var res = service.register(ctx.body());
+        } catch (UsernameTakenException ex){
+            ctx.status(403);
+            ctx.result(new Gson().toJson(ex));
         } catch (DataAccessException ex) {
-            ctx.status(401)
+            ctx.status(400);
+            ctx.result(new Gson().toJson(ex));
         }
     }
 
