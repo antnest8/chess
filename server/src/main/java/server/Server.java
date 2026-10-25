@@ -1,6 +1,7 @@
 package server;
 
 import com.google.gson.Gson;
+import dataaccess.DataAccessException;
 import io.javalin.*;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
@@ -46,8 +47,8 @@ public class Server {
     private void register(Context ctx){
         try{
             var res = service.register(ctx.body());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        } catch (DataAccessException ex) {
+            ctx.status(401)
         }
     }
 
