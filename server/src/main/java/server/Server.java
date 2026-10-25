@@ -1,13 +1,21 @@
 package server;
 
+import com.google.gson.Gson;
 import io.javalin.*;
+import io.javalin.http.Context;
+import service.ChessService;
+
+import java.util.Map;
 
 public class Server {
 
     private final Javalin javalin;
+    private final ChessService service;
 
     public Server() {
         javalin = Javalin.create(config -> config.staticFiles.add("web"));
+
+        this.service = new ChessService();
 
         // Register your endpoints and exception handlers here.
         javalin.delete("/db", this::clear)
@@ -29,5 +37,12 @@ public class Server {
         javalin.stop();
     }
 
+    private void clear(Context ctx){
+        //service.clear();
+        ctx.status(200);
+    }
 
+    private void register(Context ctx){
+        var body = new Gson().fromJson(ctx.body(), Map.class);
+    }
 }
