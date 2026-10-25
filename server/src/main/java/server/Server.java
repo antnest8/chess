@@ -30,7 +30,8 @@ public class Server {
                 .delete("/session", this::logout)
                 .get("/game", this::listGames)
                 .post("/game", this::createGame)
-                .put("/game", this::joinGame);
+                .put("/game", this::joinGame)
+                .exception(RuntimeException.class, this::runtimeHandler);
 
     }
 
@@ -128,6 +129,11 @@ public class Server {
         }else{
             return true;
         }
+    }
+
+    private void runtimeHandler(Context ctx, RuntimeException ex){
+        ctx.status(500);
+        ctx.result(new Gson().toJson(Map.of("message", ex)));
     }
 
 }
