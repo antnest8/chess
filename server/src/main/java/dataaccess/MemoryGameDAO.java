@@ -32,6 +32,7 @@ public class MemoryGameDAO implements GameDAO{
         return data.values();
     }
     public void clear(){
+        count = 0;
         data.clear();
     }
     public void deleteGame(int gameID){
