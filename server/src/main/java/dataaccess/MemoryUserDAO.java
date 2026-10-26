@@ -16,9 +16,9 @@ public class MemoryUserDAO implements UserDAO{
     public void clear(){
         data.clear();
     }
-    public void createUser(UserData userData) throws DataAccessException {
+    public void createUser(UserData userData) throws UsernameTakenException {
         if(data.putIfAbsent(userData.username(), userData) != null){
-            throw new DataAccessException("Error: Username already exists");
+            throw new UsernameTakenException("Error: Username already exists");
         }
     }
     public boolean userPassCorrect(LoginAttempt login){
