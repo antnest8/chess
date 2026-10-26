@@ -50,7 +50,7 @@ public class ChessService {
             } else {
                 throw new LoginIncorrect("Error: unauthorized");
             }
-        } catch (IllegalArgumentException ex){
+        } catch (RuntimeException ex){
             throw new DataAccessException("Error: bad request");
         }
     }
