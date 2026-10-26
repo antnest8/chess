@@ -29,11 +29,15 @@ public class ChessService {
     }
 
     public String register(String body) throws DataAccessException {
-        UserData user = new Gson().fromJson(body, UserData.class);
-        userData.createUser(user);
-        AuthData auth = new AuthData(user.username(), UUID.randomUUID().toString());
-        authData.addAuth(auth);
-        return new Gson().toJson(auth);
+        try {
+            UserData user = new Gson().fromJson(body, UserData.class);
+            userData.createUser(user);
+            AuthData auth = new AuthData(user.username(), UUID.randomUUID().toString());
+            authData.addAuth(auth);
+            return new Gson().toJson(auth);
+        } catch(IllegalArgumentException ex){
+            throw new DataAccessException("Error: bad request");
+        }
     }
 
     public String login(String body) throws DataAccessException {
