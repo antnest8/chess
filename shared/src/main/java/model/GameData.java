@@ -3,4 +3,9 @@ package model;
 import chess.ChessGame;
 
 public record GameData(int gameID, String whiteUsername, String blackUsername, String gameName, ChessGame game) {
+    public GameData {
+        if(gameID == 0 || gameName == null){
+            throw new IllegalArgumentException("gameData does not accept null for gameID or gameName");
+        }
+    }
 }
