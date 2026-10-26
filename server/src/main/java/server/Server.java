@@ -81,7 +81,9 @@ public class Server {
     }
     private void listGames(Context ctx){
         if(authorized(ctx)){
-            ctx.result(new Gson().toJson(Map.of("games", service.listGames())));
+            String res = new Gson().toJson(Map.of("games", service.listGames()));
+            ctx.contentType("application/json");
+            ctx.result(res);
         }
     }
     private void createGame(Context ctx){

@@ -1,6 +1,7 @@
 package service;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import dataaccess.*;
 import model.AuthData;
 import model.GameData;
@@ -59,8 +60,8 @@ public class ChessService {
         authData.deleteAuth(token);
     }
 
-    public String listGames(){
-        return new Gson().toJson(gameData.listGames());
+    public Collection<GameData> listGames(){
+        return gameData.listGames();
     }
 
     public int createGame(String body) throws DataAccessException{
@@ -78,7 +79,7 @@ public class ChessService {
 
     public void joinGame(String body, String token) throws DataAccessException{
         var req = new Gson().fromJson(body, Map.class);
-        var game = gameData.getGame(Integer.getInteger(req.get("gameID").toString()));
+        var game = gameData.getGame((int) Float.parseFloat(req.get("gameID").toString()));
         String color = req.get("playerColor").toString();
         var auth = authData.getAuth(token);
 
