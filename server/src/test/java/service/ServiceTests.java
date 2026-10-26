@@ -1,6 +1,7 @@
 package service;
 import com.google.gson.Gson;
 import dataaccess.DataAccessException;
+import dataaccess.GameSpaceTaken;
 import dataaccess.LoginIncorrect;
 import dataaccess.UsernameTakenException;
 import model.AuthData;
@@ -112,7 +113,7 @@ public class ServiceTests {
     @DisplayName("Test Logout")
     public void logoutTest(){
         svc.logout(existingAuth.authToken());
-        Assertions.assertThrows(LoginIncorrect.class, () -> {svc.login("{\"username\": \"preUsername\",  \"password\": \"prePassword\"}");}, "Login Succesful after logout");
+        Assertions.assertFalse(svc.tokenValid(existingAuth.authToken()), "authorization continues after logout");
     }
 
     @Test
@@ -164,10 +165,40 @@ public class ServiceTests {
     @DisplayName("join chess game successful")
     public void joinGameSuccessBothColors(){
         try{
-            int gameID = svc.createGame(newGame);
+            svc.createGame(newGame);
+            svc.joinGame(joinGameWhite, existingAuth.authToken());
+            Assertions.assertTrue(svc.listGames().contains(new GameData(1, "preUsername", null, "gameName", null)), "joining white failed");
+            svc.joinGame(joinGameBlack, existingAuth.authToken());
+            Assertions.assertTrue(svc.listGames().contains(new GameData(1, "preUsername", "preUsername", "gameName", null)), "joining black failed");
+        } catch (DataAccessException ex){
+            Assertions.fail("Unexpected Error interrupted tests: " + ex.getMessage());
+        }
+    }
+
+    @Test
+    @Order(14)
+    @DisplayName("Join Game color taken")
+    public void joinGameFailureColorTaken(){
+        try{
+            svc.createGame(newGame);
+            svc.joinGame(joinGameWhite, existingAuth.authToken());
+            Assertions.assertThrows(GameSpaceTaken.class, () ->{svc.joinGame(joinGameWhite, existingAuth.authToken());});
+            svc.clear();
+            svc.createGame(newGame);
+            svc.joinGame(joinGameBlack, existingAuth.authToken());
+            Assertions.assertThrows(GameSpaceTaken.class, () ->{svc.joinGame(joinGameBlack, existingAuth.authToken());});
 
         } catch (DataAccessException ex){
             Assertions.fail("Unexpected Error interrupted tests: " + ex.getMessage());
         }
+    }
+
+    @Test
+    @Order(15)
+    @DisplayName("Join Game Bad Request")
+    public void joinGameBadRequest(){
+        Assertions.assertDoesNotThrow(()->svc.createGame(newGame));
+        Assertions.assertThrows(DataAccessException.class, ()->svc.joinGame("{\"playerColor\": \"WHITE\",\"gameID\": 2}",existingAuth.authToken()), "no error thrown for non-existant game");
+        Assertions.assertThrows(DataAccessException.class, ()->svc.joinGame("{\"playerColor\": \"WHI\",\"gameID\": 2}",existingAuth.authToken()), "no error thrown bad color");
     }
 }
