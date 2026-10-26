@@ -31,7 +31,7 @@ public class ChessService {
     public String register(String body) throws DataAccessException {
         UserData user = new Gson().fromJson(body, UserData.class);
         userData.createUser(user);
-        AuthData auth = new AuthData(UUID.randomUUID().toString(), user.username());
+        AuthData auth = new AuthData(user.username(), UUID.randomUUID().toString());
         authData.addAuth(auth);
         return new Gson().toJson(auth);
     }
@@ -42,7 +42,7 @@ public class ChessService {
             throw new DataAccessException("Error: bad request");
         }
         if(userData.userPassCorrect(login)){
-            AuthData auth = new AuthData(UUID.randomUUID().toString(), login.username());
+            AuthData auth = new AuthData(login.username(), UUID.randomUUID().toString());
             authData.addAuth(auth);
             return new Gson().toJson(auth);
         } else{
