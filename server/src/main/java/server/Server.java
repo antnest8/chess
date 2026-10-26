@@ -75,19 +75,13 @@ public class Server {
     }
     private void logout(Context ctx){
         if(authorized(ctx)){
-            service.logout(ctx.body());
-        } else{
-            ctx.status(401);
-            ctx.result(new Gson().toJson(Map.of("message", "unauthorized")));
+            service.logout(ctx.header("Authorization"));
         }
 
     }
     private void listGames(Context ctx){
         if(authorized(ctx)){
             ctx.result(new Gson().toJson(Map.of("games", service.listGames())));
-        } else{
-            ctx.status(401);
-            ctx.result(new Gson().toJson(Map.of("message", "unauthorized")));
         }
     }
     private void createGame(Context ctx){
@@ -98,9 +92,6 @@ public class Server {
                 ctx.status(400);
                 ctx.result(new Gson().toJson(Map.of("message", ex.getMessage())));
             }
-        } else{
-            ctx.status(401);
-            ctx.result(new Gson().toJson(Map.of("message", "unauthorized")));
         }
     }
     private void joinGame(Context ctx){
@@ -114,9 +105,6 @@ public class Server {
                 ctx.status(400);
                 ctx.result(new Gson().toJson(Map.of("message", ex.getMessage())));
             }
-        } else{
-            ctx.status(401);
-            ctx.result(new Gson().toJson(Map.of("message", "unauthorized")));
         }
     }
 

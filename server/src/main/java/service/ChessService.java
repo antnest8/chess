@@ -35,7 +35,7 @@ public class ChessService {
             AuthData auth = new AuthData(user.username(), UUID.randomUUID().toString());
             authData.addAuth(auth);
             return new Gson().toJson(auth);
-        } catch(IllegalArgumentException ex){
+        } catch(RuntimeException ex){
             throw new DataAccessException("Error: bad request");
         }
     }
