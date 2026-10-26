@@ -63,7 +63,8 @@ public class Server {
 
     private void login(Context ctx){
         try{
-            ctx.result(service.login(ctx.body()));
+            String res = service.login(ctx.body());
+            ctx.result(res);
         } catch (LoginIncorrect ex){
             ctx.status(401);
             ctx.result(new Gson().toJson(Map.of("message", ex.getMessage())));

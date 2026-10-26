@@ -80,12 +80,12 @@ public class ChessService {
                 if(game.whiteUsername() != null){
                     throw new GameSpaceTaken("Error: already taken");
                 }
-                gameData.updateGame(new GameData(game.gameID(), auth.userName(), game.blackUsername(), game.gameName(), game.game()));
+                gameData.updateGame(new GameData(game.gameID(), auth.username(), game.blackUsername(), game.gameName(), game.game()));
             } else if(color.equals("BLACK")){
                 if(game.blackUsername() != null){
                     throw new GameSpaceTaken("Error: already taken");
                 }
-                gameData.updateGame(new GameData(game.gameID(), game.whiteUsername(), auth.userName(), game.gameName(), game.game()));
+                gameData.updateGame(new GameData(game.gameID(), game.whiteUsername(), auth.username(), game.gameName(), game.game()));
             }
         }
     }
