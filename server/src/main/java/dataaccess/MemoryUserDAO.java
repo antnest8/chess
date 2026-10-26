@@ -7,10 +7,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MemoryUserDAO implements UserDAO{
-    private Map<String, UserData> data;
+    private final Map<String, UserData> data;
 
     public MemoryUserDAO(){
-        this.data = new HashMap<String, UserData>();
+        this.data = new HashMap<>();
     }
 
     public void clear(){

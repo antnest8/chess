@@ -1,6 +1,5 @@
 package model;
 
-import java.io.InvalidObjectException;
 
 public record AuthData(String username, String authToken) {
     public AuthData {

@@ -7,10 +7,9 @@ import dataaccess.LoginIncorrect;
 import dataaccess.UsernameTakenException;
 import io.javalin.*;
 import io.javalin.http.Context;
-import io.javalin.http.Handler;
 import service.ChessService;
 
-import javax.xml.crypto.Data;
+
 import java.util.Map;
 
 public class Server {

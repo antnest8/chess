@@ -6,7 +6,6 @@ import dataaccess.LoginIncorrect;
 import dataaccess.UsernameTakenException;
 import model.AuthData;
 import model.GameData;
-import model.UserData;
 import org.junit.jupiter.api.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -54,7 +53,7 @@ public class ServiceTests {
     @DisplayName("NewRegister Success")
     public void newRegisterTest(){
         try {
-            AuthData newAuth = new Gson().fromJson(svc.register(newUser), AuthData.class);
+            svc.register(newUser);
         } catch (DataAccessException ex){
             Assertions.fail("Attempting to register a new user threw: " + ex.getMessage());
         }
@@ -65,8 +64,8 @@ public class ServiceTests {
     @DisplayName("Double Register Failure")
     public void doubleRegisterTest(){
         try {
-            AuthData newAuth = new Gson().fromJson(svc.register(newUser), AuthData.class);
-            Assertions.assertThrows(UsernameTakenException.class, () -> {svc.register(newUser);});
+            svc.register(newUser);
+            Assertions.assertThrows(UsernameTakenException.class, () -> svc.register(newUser));
         }  catch (DataAccessException ex){
             Assertions.fail("Was expecting a UsernameTakenException not a: " + ex.getMessage());
         }
@@ -76,18 +75,18 @@ public class ServiceTests {
     @Order(4)
     @DisplayName("Register Bad Request From Null")
     public void badRegisterTest(){
-        Assertions.assertThrows(DataAccessException.class, () -> {svc.register("{\"password\": \"password\",  \"email\": \"email\"}");}, "permissive to null username");
-        Assertions.assertThrows(DataAccessException.class, () -> {svc.register("{\"username\": \"myUser\", \"email\": \"email\"}");}, "permissive to null password");
-        Assertions.assertThrows(DataAccessException.class, () -> {svc.register("{\"username\": \"myUser\",  \"password\": \"password\"}");}, "permissive to null email");
+        Assertions.assertThrows(DataAccessException.class, () -> svc.register("{\"password\": \"password\",  \"email\": \"email\"}"), "permissive to null username");
+        Assertions.assertThrows(DataAccessException.class, () -> svc.register("{\"username\": \"myUser\", \"email\": \"email\"}"), "permissive to null password");
+        Assertions.assertThrows(DataAccessException.class, () -> svc.register("{\"username\": \"myUser\",  \"password\": \"password\"}"), "permissive to null email");
     }
 
     @Test
     @Order(5)
     @DisplayName("Register Bad Request From Null")
     public void badBlankRegisterTest(){
-        Assertions.assertThrows(DataAccessException.class, () -> {svc.register("{\"username\": \"\", \"password\": \"password\",  \"email\": \"email\"}");}, "permissive to null username");
-        Assertions.assertThrows(DataAccessException.class, () -> {svc.register("{\"username\": \"myUser\", \"password\": \"\t\",  \"email\": \"email\"}");}, "permissive to null password");
-        Assertions.assertThrows(DataAccessException.class, () -> {svc.register("{\"username\": \"myUser\", \"password\": \"password\",  \"email\": \" \"}");}, "permissive to null email");
+        Assertions.assertThrows(DataAccessException.class, () -> svc.register("{\"username\": \"\", \"password\": \"password\",  \"email\": \"email\"}"), "permissive to null username");
+        Assertions.assertThrows(DataAccessException.class, () -> svc.register("{\"username\": \"myUser\", \"password\": \"\t\",  \"email\": \"email\"}"), "permissive to null password");
+        Assertions.assertThrows(DataAccessException.class, () -> svc.register("{\"username\": \"myUser\", \"password\": \"password\",  \"email\": \" \"}"), "permissive to null email");
     }
 
     @Test
@@ -97,7 +96,7 @@ public class ServiceTests {
 
         Assertions.assertDoesNotThrow(() -> {svc.login(loginReq);}, "Failed to login.");
         svc.clear();
-        Assertions.assertThrows(LoginIncorrect.class, () -> {svc.login(loginReq);});
+        Assertions.assertThrows(LoginIncorrect.class, () -> svc.login(loginReq));
 
     }
 
@@ -105,7 +104,7 @@ public class ServiceTests {
     @Order(7)
     @DisplayName("Login Bad Request Test")
     public void loginBadRequest(){
-        Assertions.assertThrows(DataAccessException.class, () -> {svc.login("{\"password\": \"password\"}");}, "permissive to bad logins");
+        Assertions.assertThrows(DataAccessException.class, () -> svc.login("{\"password\": \"password\"}"), "permissive to bad logins");
     }
 
     @Test
@@ -142,7 +141,7 @@ public class ServiceTests {
     @Order(11)
     @DisplayName("New Game bad request")
     public void newGameBadRequestTest(){
-        Assertions.assertThrows(DataAccessException.class, ()->{svc.createGame("");}, "permissive to bad new game request");
+        Assertions.assertThrows(DataAccessException.class, ()-> svc.createGame(""), "permissive to bad new game request");
     }
 
     @Test
@@ -182,10 +181,10 @@ public class ServiceTests {
         try{
             svc.createGame(newGame);
             svc.joinGame(joinGameWhite, existingAuth.authToken());
-            Assertions.assertThrows(GameSpaceTaken.class, () ->{svc.joinGame(joinGameWhite, existingAuth.authToken());}, "no error for white double joining");
+            Assertions.assertThrows(GameSpaceTaken.class, () -> svc.joinGame(joinGameWhite, existingAuth.authToken()), "no error for white double joining");
             svc.createGame(newGame);
             svc.joinGame("{\"playerColor\": \"BLACK\",\"gameID\": 2}", existingAuth.authToken());
-            Assertions.assertThrows(GameSpaceTaken.class, () ->{svc.joinGame("{\"playerColor\": \"BLACK\",\"gameID\": 2}", existingAuth.authToken());}, "no error for black double joining");
+            Assertions.assertThrows(GameSpaceTaken.class, () -> svc.joinGame("{\"playerColor\": \"BLACK\",\"gameID\": 2}", existingAuth.authToken()), "no error for black double joining");
 
         } catch (DataAccessException ex){
             Assertions.fail("Unexpected Error interrupted tests: " + ex.getMessage());
@@ -197,7 +196,7 @@ public class ServiceTests {
     @DisplayName("Join Game Bad Request")
     public void joinGameBadRequest(){
         Assertions.assertDoesNotThrow(()->svc.createGame(newGame));
-        Assertions.assertThrows(DataAccessException.class, ()->svc.joinGame("{\"playerColor\": \"WHITE\",\"gameID\": 2}",existingAuth.authToken()), "no error thrown for non-existant game");
+        Assertions.assertThrows(DataAccessException.class, ()->svc.joinGame("{\"playerColor\": \"WHITE\",\"gameID\": 2}",existingAuth.authToken()), "no error thrown for non-existent game");
         Assertions.assertThrows(DataAccessException.class, ()->svc.joinGame("{\"playerColor\": \"WHI\",\"gameID\": 2}",existingAuth.authToken()), "no error thrown bad color");
     }
 }

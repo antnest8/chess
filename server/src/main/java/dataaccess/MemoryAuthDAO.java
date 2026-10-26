@@ -7,10 +7,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MemoryAuthDAO implements AuthDAO {
-    private Map<String, AuthData> data;
+    private final Map<String, AuthData> data;
 
     public MemoryAuthDAO(){
-        data = new HashMap<String, AuthData>();
+        data = new HashMap<>();
     }
 
     public void clear(){
