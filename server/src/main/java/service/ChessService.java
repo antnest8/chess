@@ -65,8 +65,8 @@ public class ChessService {
 
     public int createGame(String body) throws DataAccessException{
         try {
-            var name = new Gson().fromJson(body, GameData.class);
-            return gameData.createGame(name.gameName());
+            var name = new Gson().fromJson(body, Map.class);
+            return gameData.createGame(name.get("gameName").toString());
         } catch (RuntimeException ex){
             throw new DataAccessException("Error: bad request");
         }
