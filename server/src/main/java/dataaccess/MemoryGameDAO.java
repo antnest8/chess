@@ -21,7 +21,9 @@ public class MemoryGameDAO implements GameDAO{
         return game.gameID();
     }
     public GameData getGame(int gameID){
-        return data.get(gameID);
+        GameData game = data.get(gameID);
+        if(game == null) {throw new NullPointerException("No game found");}
+        return game;
     }
     public void updateGame(GameData game){
         data.put(game.gameID(), game);
