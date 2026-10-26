@@ -182,11 +182,10 @@ public class ServiceTests {
         try{
             svc.createGame(newGame);
             svc.joinGame(joinGameWhite, existingAuth.authToken());
-            Assertions.assertThrows(GameSpaceTaken.class, () ->{svc.joinGame(joinGameWhite, existingAuth.authToken());});
-            svc.clear();
+            Assertions.assertThrows(GameSpaceTaken.class, () ->{svc.joinGame(joinGameWhite, existingAuth.authToken());}, "no error for white double joining");
             svc.createGame(newGame);
-            svc.joinGame(joinGameBlack, existingAuth.authToken());
-            Assertions.assertThrows(GameSpaceTaken.class, () ->{svc.joinGame(joinGameBlack, existingAuth.authToken());});
+            svc.joinGame("{\"playerColor\": \"BLACK\",\"gameID\": 2}", existingAuth.authToken());
+            Assertions.assertThrows(GameSpaceTaken.class, () ->{svc.joinGame("{\"playerColor\": \"BLACK\",\"gameID\": 2}", existingAuth.authToken());}, "no error for black double joining");
 
         } catch (DataAccessException ex){
             Assertions.fail("Unexpected Error interrupted tests: " + ex.getMessage());
