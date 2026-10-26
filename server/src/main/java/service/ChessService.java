@@ -41,16 +41,17 @@ public class ChessService {
     }
 
     public String login(String body) throws DataAccessException {
-        LoginAttempt login = new Gson().fromJson(body, LoginAttempt.class);
-        if(login.username() == null || login.password() == null){
+        try {
+            LoginAttempt login = new Gson().fromJson(body, LoginAttempt.class);
+            if (userData.userPassCorrect(login)) {
+                AuthData auth = new AuthData(login.username(), UUID.randomUUID().toString());
+                authData.addAuth(auth);
+                return new Gson().toJson(auth);
+            } else {
+                throw new LoginIncorrect("Error: unauthorized");
+            }
+        } catch (IllegalArgumentException ex){
             throw new DataAccessException("Error: bad request");
-        }
-        if(userData.userPassCorrect(login)){
-            AuthData auth = new AuthData(login.username(), UUID.randomUUID().toString());
-            authData.addAuth(auth);
-            return new Gson().toJson(auth);
-        } else{
-            throw new LoginIncorrect("Error: unauthorized");
         }
     }
 
