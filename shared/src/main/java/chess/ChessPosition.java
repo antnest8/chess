@@ -13,7 +13,7 @@ public class ChessPosition {
     private final int row;
     private final int col;
     private ChessPiece piece; //usually null
-    private final char[] COLCHARS = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
+    private final static char[] COLCHARS = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
 
     public ChessPosition(int row, int col) {
         this.row = row;

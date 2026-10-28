@@ -12,11 +12,11 @@ import org.junit.jupiter.api.*;
 public class ServiceTests {
     private static ChessService svc;
     //common strings
-    private final static String newUser = "{\"username\": \"username\",  \"password\": \"password\",  \"email\": \"email\"}";
-    private final static String loginReq = "{\"username\": \"preUsername\",  \"password\": \"prePassword\"}";
-    private final static String newGame = "{\"gameName\": \"gameName\"}";
-    private final static String joinGameWhite = "{\"playerColor\": \"WHITE\",\"gameID\": 1}";
-    private final static String joinGameBlack = "{\"playerColor\": \"BLACK\",\"gameID\": 1}";
+    private final static String NEW_USER = "{\"username\": \"username\",  \"password\": \"password\",  \"email\": \"email\"}";
+    private final static String LOGIN_REQ = "{\"username\": \"preUsername\",  \"password\": \"prePassword\"}";
+    private final static String NEW_GAME = "{\"gameName\": \"gameName\"}";
+    private final static String JOIN_GAME_WHITE = "{\"playerColor\": \"WHITE\",\"gameID\": 1}";
+    private final static String JOIN_GAME_BLACK = "{\"playerColor\": \"BLACK\",\"gameID\": 1}";
     private AuthData existingAuth;
 
     @BeforeAll
@@ -53,7 +53,7 @@ public class ServiceTests {
     @DisplayName("NewRegister Success")
     public void newRegisterTest(){
         try {
-            svc.register(newUser);
+            svc.register(NEW_USER);
         } catch (DataAccessException ex){
             Assertions.fail("Attempting to register a new user threw: " + ex.getMessage());
         }
@@ -64,8 +64,8 @@ public class ServiceTests {
     @DisplayName("Double Register Failure")
     public void doubleRegisterTest(){
         try {
-            svc.register(newUser);
-            Assertions.assertThrows(UsernameTakenException.class, () -> svc.register(newUser));
+            svc.register(NEW_USER);
+            Assertions.assertThrows(UsernameTakenException.class, () -> svc.register(NEW_USER));
         }  catch (DataAccessException ex){
             Assertions.fail("Was expecting a UsernameTakenException not a: " + ex.getMessage());
         }
@@ -94,9 +94,9 @@ public class ServiceTests {
     @DisplayName("Login Success and Failure")
     public void loginTest(){
 
-        Assertions.assertDoesNotThrow(() -> {svc.login(loginReq);}, "Failed to login.");
+        Assertions.assertDoesNotThrow(() -> {svc.login(LOGIN_REQ);}, "Failed to login.");
         svc.clear();
-        Assertions.assertThrows(LoginIncorrect.class, () -> svc.login(loginReq));
+        Assertions.assertThrows(LoginIncorrect.class, () -> svc.login(LOGIN_REQ));
 
     }
 
@@ -119,7 +119,7 @@ public class ServiceTests {
     @Order(9)
     @DisplayName("Create Game No Errors")
     public void createGameBasicTest(){
-        Assertions.assertDoesNotThrow(() -> {svc.createGame(newGame);}, "new game threw error");
+        Assertions.assertDoesNotThrow(() -> {svc.createGame(NEW_GAME);}, "new game threw error");
     }
 
     @Test
@@ -127,7 +127,7 @@ public class ServiceTests {
     @DisplayName("Test listing a game")
     public void basicListGameTest(){
         try {
-            int gameID = svc.createGame(newGame);
+            int gameID = svc.createGame(NEW_GAME);
             var gameList = svc.listGames();
             Assertions.assertTrue(gameList.contains(new GameData(gameID, null, null, "gameName", null)), "could not find new game in gameList");
             svc.clear();
@@ -152,7 +152,7 @@ public class ServiceTests {
             Assertions.assertTrue(svc.tokenValid(existingAuth.authToken()), "Authentication failed for existing user");
             svc.logout(existingAuth.authToken());
             Assertions.assertFalse(svc.tokenValid(existingAuth.authToken()), "Auth successful after logout");
-            AuthData newAuth = new Gson().fromJson(svc.login(loginReq), AuthData.class);
+            AuthData newAuth = new Gson().fromJson(svc.login(LOGIN_REQ), AuthData.class);
             Assertions.assertTrue(svc.tokenValid(newAuth.authToken()), "Authentication failed for new login");
         } catch (DataAccessException ex){
             Assertions.fail("Unexpected Error interrupted tests: " + ex.getMessage());
@@ -164,10 +164,10 @@ public class ServiceTests {
     @DisplayName("join chess game successful")
     public void joinGameSuccessBothColors(){
         try{
-            svc.createGame(newGame);
-            svc.joinGame(joinGameWhite, existingAuth.authToken());
+            svc.createGame(NEW_GAME);
+            svc.joinGame(JOIN_GAME_WHITE, existingAuth.authToken());
             Assertions.assertTrue(svc.listGames().contains(new GameData(1, "preUsername", null, "gameName", null)), "joining white failed");
-            svc.joinGame(joinGameBlack, existingAuth.authToken());
+            svc.joinGame(JOIN_GAME_BLACK, existingAuth.authToken());
             Assertions.assertTrue(svc.listGames().contains(new GameData(1, "preUsername", "preUsername", "gameName", null)), "joining black failed");
         } catch (DataAccessException ex){
             Assertions.fail("Unexpected Error interrupted tests: " + ex.getMessage());
@@ -179,10 +179,10 @@ public class ServiceTests {
     @DisplayName("Join Game color taken")
     public void joinGameFailureColorTaken(){
         try{
-            svc.createGame(newGame);
-            svc.joinGame(joinGameWhite, existingAuth.authToken());
-            Assertions.assertThrows(GameSpaceTaken.class, () -> svc.joinGame(joinGameWhite, existingAuth.authToken()), "no error for white double joining");
-            svc.createGame(newGame);
+            svc.createGame(NEW_GAME);
+            svc.joinGame(JOIN_GAME_WHITE, existingAuth.authToken());
+            Assertions.assertThrows(GameSpaceTaken.class, () -> svc.joinGame(JOIN_GAME_WHITE, existingAuth.authToken()), "no error for white double joining");
+            svc.createGame(NEW_GAME);
             svc.joinGame("{\"playerColor\": \"BLACK\",\"gameID\": 2}", existingAuth.authToken());
             Assertions.assertThrows(GameSpaceTaken.class, () -> svc.joinGame("{\"playerColor\": \"BLACK\",\"gameID\": 2}", existingAuth.authToken()), "no error for black double joining");
 
@@ -195,7 +195,7 @@ public class ServiceTests {
     @Order(15)
     @DisplayName("Join Game Bad Request")
     public void joinGameBadRequest(){
-        Assertions.assertDoesNotThrow(()->svc.createGame(newGame));
+        Assertions.assertDoesNotThrow(()->svc.createGame(NEW_GAME));
         Assertions.assertThrows(DataAccessException.class, ()->svc.joinGame("{\"playerColor\": \"WHITE\",\"gameID\": 2}",existingAuth.authToken()), "no error thrown for non-existent game");
         Assertions.assertThrows(DataAccessException.class, ()->svc.joinGame("{\"playerColor\": \"WHI\",\"gameID\": 2}",existingAuth.authToken()), "no error thrown bad color");
     }
