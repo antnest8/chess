@@ -69,7 +69,6 @@ public class ChessGame {
 
 
             return pieceMoves;
-            //TODO: add al pasant and castling.
         }else{
             return null;
         }
@@ -146,20 +145,17 @@ public class ChessGame {
      */
     public boolean isInCheck(TeamColor teamColor) {
         ChessPosition king = getKingPosition(teamColor);
-        if(board.findMatch((position) -> {
-            if(position.hasPiece() && position.getPiece().getTeamColor() != teamColor){
+        return board.findMatch((position) -> {
+            if (position.hasPiece() && position.getPiece().getTeamColor() != teamColor) {
                 Collection<ChessMove> moves = position.getPiece().pieceMoves(board, position);
-                for (var move : moves){
-                    if(move.getEndPosition().equals(king)){
+                for (var move : moves) {
+                    if (move.getEndPosition().equals(king)) {
                         return true;
                     }
                 }
             }
             return false;
-        }) != null){
-            return true;
-        }
-        return false;
+        }) != null;
     }
 
 
@@ -216,7 +212,6 @@ public class ChessGame {
     }
 
 
-    //TODO: if this function is not used... remove it.
     public TeamColor otherTeam(TeamColor color){
         if(color == TeamColor.BLACK) {
             return TeamColor.WHITE;
@@ -235,7 +230,7 @@ public class ChessGame {
     @Override
     public String toString(){
         return "Current Turn:" + currentTurn +"\nBoard: \n" + board.toString();
-    };
+    }
 
     @Override
     public int hashCode(){
