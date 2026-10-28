@@ -12,7 +12,8 @@ import org.junit.jupiter.api.*;
 public class ServiceTests {
     private static ChessService svc;
     //common strings
-    private final static String NEW_USER = "{\"username\": \"username\",  \"password\": \"password\",  \"email\": \"email\"}";
+    private final static String NEW_USER = "{\"username\": \"username\",  \"password\": \"password\",  " +
+                                                "\"email\": \"email\"}";
     private final static String LOGIN_REQ = "{\"username\": \"preUsername\",  \"password\": \"prePassword\"}";
     private final static String NEW_GAME = "{\"gameName\": \"gameName\"}";
     private final static String JOIN_GAME_WHITE = "{\"playerColor\": \"WHITE\",\"gameID\": 1}";
@@ -29,7 +30,8 @@ public class ServiceTests {
         svc.clear();
 
         try {
-            existingAuth = new Gson().fromJson(svc.register("{\"username\": \"preUsername\",  \"password\": \"prePassword\",  \"email\": \"pre@email\"}"), AuthData.class);
+            existingAuth = new Gson().fromJson(svc.register("{\"username\": \"preUsername\",  " +
+                    "\"password\": \"prePassword\",  \"email\": \"pre@email\"}"), AuthData.class);
         } catch (DataAccessException ex){
             Assertions.fail("Failure to register an existing user");
         }
@@ -41,7 +43,8 @@ public class ServiceTests {
     public void clearTest(){
         svc.clear();
         try{
-            AuthData newAuth = new Gson().fromJson(svc.register("{\"username\": \"preUsername\",  \"password\": \"prePassword\",  \"email\": \"pre@email\"}"), AuthData.class);
+            AuthData newAuth = new Gson().fromJson(svc.register("{\"username\": \"preUsername\"," +
+                    "  \"password\": \"prePassword\",  \"email\": \"pre@email\"}"), AuthData.class);
             Assertions.assertNotEquals(newAuth.authToken(), existingAuth.authToken());
         } catch (DataAccessException ex){
             Assertions.fail("Could not register existing user after clearing service. threw" + ex.getMessage());
@@ -75,18 +78,30 @@ public class ServiceTests {
     @Order(4)
     @DisplayName("Register Bad Request From Null")
     public void badRegisterTest(){
-        Assertions.assertThrows(DataAccessException.class, () -> svc.register("{\"password\": \"password\",  \"email\": \"email\"}"), "permissive to null username");
-        Assertions.assertThrows(DataAccessException.class, () -> svc.register("{\"username\": \"myUser\", \"email\": \"email\"}"), "permissive to null password");
-        Assertions.assertThrows(DataAccessException.class, () -> svc.register("{\"username\": \"myUser\",  \"password\": \"password\"}"), "permissive to null email");
+        Assertions.assertThrows(DataAccessException.class,
+                () -> svc.register("{\"password\": \"password\",  \"email\": \"email\"}"),
+                "permissive to null username");
+        Assertions.assertThrows(DataAccessException.class,
+                () -> svc.register("{\"username\": \"myUser\", \"email\": \"email\"}"),
+                "permissive to null password");
+        Assertions.assertThrows(DataAccessException.class,
+                () -> svc.register("{\"username\": \"myUser\",  \"password\": \"password\"}"),
+                "permissive to null email");
     }
 
     @Test
     @Order(5)
     @DisplayName("Register Bad Request From Null")
     public void badBlankRegisterTest(){
-        Assertions.assertThrows(DataAccessException.class, () -> svc.register("{\"username\": \"\", \"password\": \"password\",  \"email\": \"email\"}"), "permissive to null username");
-        Assertions.assertThrows(DataAccessException.class, () -> svc.register("{\"username\": \"myUser\", \"password\": \"\t\",  \"email\": \"email\"}"), "permissive to null password");
-        Assertions.assertThrows(DataAccessException.class, () -> svc.register("{\"username\": \"myUser\", \"password\": \"password\",  \"email\": \" \"}"), "permissive to null email");
+        Assertions.assertThrows(DataAccessException.class,
+                () -> svc.register("{\"username\": \"\", \"password\": \"password\",  \"email\": \"email\"}"),
+                "permissive to null username");
+        Assertions.assertThrows(DataAccessException.class,
+                () -> svc.register("{\"username\": \"myUser\", \"password\": \"\t\",  \"email\": \"email\"}"),
+                "permissive to null password");
+        Assertions.assertThrows(DataAccessException.class,
+                () -> svc.register("{\"username\": \"myUser\", \"password\": \"password\",  \"email\": \" \"}"),
+                "permissive to null email");
     }
 
     @Test
@@ -104,7 +119,8 @@ public class ServiceTests {
     @Order(7)
     @DisplayName("Login Bad Request Test")
     public void loginBadRequest(){
-        Assertions.assertThrows(DataAccessException.class, () -> svc.login("{\"password\": \"password\"}"), "permissive to bad logins");
+        Assertions.assertThrows(DataAccessException.class, () -> svc.login("{\"password\": \"password\"}"),
+                "permissive to bad logins");
     }
 
     @Test
@@ -129,7 +145,10 @@ public class ServiceTests {
         try {
             int gameID = svc.createGame(NEW_GAME);
             var gameList = svc.listGames();
-            Assertions.assertTrue(gameList.contains(new GameData(gameID, null, null, "gameName", null)), "could not find new game in gameList");
+            Assertions.assertTrue(gameList.contains(
+                    new GameData(gameID, null, null, "gameName", null)),
+                    "could not find new game in gameList"
+            );
             svc.clear();
             Assertions.assertTrue(svc.listGames().isEmpty(), "gameList not empty after clearing");
         } catch (DataAccessException ex){
@@ -141,7 +160,9 @@ public class ServiceTests {
     @Order(11)
     @DisplayName("New Game bad request")
     public void newGameBadRequestTest(){
-        Assertions.assertThrows(DataAccessException.class, ()-> svc.createGame(""), "permissive to bad new game request");
+        Assertions.assertThrows(
+                DataAccessException.class, ()-> svc.createGame(""), "permissive to bad new game request"
+        );
     }
 
     @Test
@@ -149,7 +170,9 @@ public class ServiceTests {
     @DisplayName("Authentication Testing")
     public void authenticationTest(){
         try {
-            Assertions.assertTrue(svc.tokenValid(existingAuth.authToken()), "Authentication failed for existing user");
+            Assertions.assertTrue(svc.tokenValid(
+                    existingAuth.authToken()), "Authentication failed for existing user"
+            );
             svc.logout(existingAuth.authToken());
             Assertions.assertFalse(svc.tokenValid(existingAuth.authToken()), "Auth successful after logout");
             AuthData newAuth = new Gson().fromJson(svc.login(LOGIN_REQ), AuthData.class);
@@ -166,9 +189,13 @@ public class ServiceTests {
         try{
             svc.createGame(NEW_GAME);
             svc.joinGame(JOIN_GAME_WHITE, existingAuth.authToken());
-            Assertions.assertTrue(svc.listGames().contains(new GameData(1, "preUsername", null, "gameName", null)), "joining white failed");
+            Assertions.assertTrue(svc.listGames().contains(new GameData(
+                    1, "preUsername", null, "gameName", null)
+            ), "joining white failed");
             svc.joinGame(JOIN_GAME_BLACK, existingAuth.authToken());
-            Assertions.assertTrue(svc.listGames().contains(new GameData(1, "preUsername", "preUsername", "gameName", null)), "joining black failed");
+            Assertions.assertTrue(svc.listGames().contains(new GameData(
+                    1, "preUsername", "preUsername", "gameName", null)
+            ), "joining black failed");
         } catch (DataAccessException ex){
             Assertions.fail("Unexpected Error interrupted tests: " + ex.getMessage());
         }
@@ -181,10 +208,17 @@ public class ServiceTests {
         try{
             svc.createGame(NEW_GAME);
             svc.joinGame(JOIN_GAME_WHITE, existingAuth.authToken());
-            Assertions.assertThrows(GameSpaceTaken.class, () -> svc.joinGame(JOIN_GAME_WHITE, existingAuth.authToken()), "no error for white double joining");
+            Assertions.assertThrows(
+                    GameSpaceTaken.class, () -> svc.joinGame(JOIN_GAME_WHITE, existingAuth.authToken()),
+                    "no error for white double joining"
+            );
             svc.createGame(NEW_GAME);
             svc.joinGame("{\"playerColor\": \"BLACK\",\"gameID\": 2}", existingAuth.authToken());
-            Assertions.assertThrows(GameSpaceTaken.class, () -> svc.joinGame("{\"playerColor\": \"BLACK\",\"gameID\": 2}", existingAuth.authToken()), "no error for black double joining");
+            Assertions.assertThrows(
+                    GameSpaceTaken.class,
+                    () -> svc.joinGame("{\"playerColor\": \"BLACK\",\"gameID\": 2}", existingAuth.authToken()),
+                    "no error for black double joining"
+            );
 
         } catch (DataAccessException ex){
             Assertions.fail("Unexpected Error interrupted tests: " + ex.getMessage());
@@ -196,7 +230,15 @@ public class ServiceTests {
     @DisplayName("Join Game Bad Request")
     public void joinGameBadRequest(){
         Assertions.assertDoesNotThrow(()->svc.createGame(NEW_GAME));
-        Assertions.assertThrows(DataAccessException.class, ()->svc.joinGame("{\"playerColor\": \"WHITE\",\"gameID\": 2}",existingAuth.authToken()), "no error thrown for non-existent game");
-        Assertions.assertThrows(DataAccessException.class, ()->svc.joinGame("{\"playerColor\": \"WHI\",\"gameID\": 2}",existingAuth.authToken()), "no error thrown bad color");
+        Assertions.assertThrows(
+                DataAccessException.class,
+                ()->svc.joinGame("{\"playerColor\": \"WHITE\",\"gameID\": 2}",existingAuth.authToken()),
+                "no error thrown for non-existent game"
+        );
+        Assertions.assertThrows(
+                DataAccessException.class,
+                ()->svc.joinGame("{\"playerColor\": \"WHI\",\"gameID\": 2}",existingAuth.authToken()),
+                "no error thrown bad color"
+        );
     }
 }
