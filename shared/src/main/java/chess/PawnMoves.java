@@ -37,10 +37,7 @@ public class PawnMoves implements MoveProvider{
          */
         var target = new ChessPosition(position.getRow() + (colorMult), position.getColumn());
         if(promotionRow == target.getRow() && !board.hasPiece(target)){
-            moves.add(new ChessMove(position, target, ChessPiece.PieceType.BISHOP));
-            moves.add(new ChessMove(position, target, ChessPiece.PieceType.ROOK));
-            moves.add(new ChessMove(position, target, ChessPiece.PieceType.KNIGHT));
-            moves.add(new ChessMove(position, target, ChessPiece.PieceType.QUEEN));
+            appendPromotionsTo(moves, position, target);
         }
         else if(!board.hasPiece(target)){
             moves.add(new ChessMove(position, target, null));
@@ -61,10 +58,7 @@ public class PawnMoves implements MoveProvider{
         target = new ChessPosition(position.getRow() + colorMult, position.getColumn() + 1);
         if(board.positionExists(target) && board.hasPiece(target) && board.getPiece(target).getTeamColor() != color){
             if(promotionRow == target.getRow()){
-                moves.add(new ChessMove(position, target, ChessPiece.PieceType.BISHOP));
-                moves.add(new ChessMove(position, target, ChessPiece.PieceType.ROOK));
-                moves.add(new ChessMove(position, target, ChessPiece.PieceType.KNIGHT));
-                moves.add(new ChessMove(position, target, ChessPiece.PieceType.QUEEN));
+                appendPromotionsTo(moves, position, target);
             }else{
                 moves.add(new ChessMove(position, target, null));
             }
@@ -74,10 +68,7 @@ public class PawnMoves implements MoveProvider{
         target = new ChessPosition(position.getRow() + colorMult, position.getColumn() - 1);
         if(board.positionExists(target) && board.hasPiece(target) && board.getPiece(target).getTeamColor() != color){
             if(promotionRow == target.getRow()){
-                moves.add(new ChessMove(position, target, ChessPiece.PieceType.BISHOP));
-                moves.add(new ChessMove(position, target, ChessPiece.PieceType.ROOK));
-                moves.add(new ChessMove(position, target, ChessPiece.PieceType.KNIGHT));
-                moves.add(new ChessMove(position, target, ChessPiece.PieceType.QUEEN));
+                appendPromotionsTo(moves, position, target);
             }else{
                 moves.add(new ChessMove(position, target, null));
             }
@@ -85,6 +76,14 @@ public class PawnMoves implements MoveProvider{
 
 
         return moves;
+    }
+
+
+    private void appendPromotionsTo(Collection<ChessMove> moves, ChessPosition position, ChessPosition target){
+        moves.add(new ChessMove(position, target, ChessPiece.PieceType.BISHOP));
+        moves.add(new ChessMove(position, target, ChessPiece.PieceType.ROOK));
+        moves.add(new ChessMove(position, target, ChessPiece.PieceType.KNIGHT));
+        moves.add(new ChessMove(position, target, ChessPiece.PieceType.QUEEN));
     }
 
 }
