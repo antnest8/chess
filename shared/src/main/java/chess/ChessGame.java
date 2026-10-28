@@ -189,7 +189,9 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        return !isInCheckmate(teamColor) && board.findMatch((position) -> position.hasPiece() && position.getPiece().getTeamColor() == teamColor && !validMoves(position).isEmpty()
+        return !isInCheckmate(teamColor) && board.findMatch((position) -> position.hasPiece() &&
+                position.getPiece().getTeamColor() == teamColor &&
+                !validMoves(position).isEmpty()
         ) == null;
     }
 

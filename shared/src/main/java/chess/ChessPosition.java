@@ -46,12 +46,12 @@ public class ChessPosition {
     }
 
     @Override
-    public boolean equals(Object o){
-        if(o == this){
+    public boolean equals(Object oPos){
+        if(oPos == this){
             return true;
         }
-        else if(o != null && o.getClass() == getClass()){
-            return o.toString().equals(toString());
+        else if(oPos != null && oPos.getClass() == getClass()){
+            return oPos.toString().equals(toString());
         }
 
         return false;

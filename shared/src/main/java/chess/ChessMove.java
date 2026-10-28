@@ -52,12 +52,12 @@ public class ChessMove {
     }
 
     @Override
-    public boolean equals(Object o){
-        if(o == this){
+    public boolean equals(Object oMv){
+        if(oMv == this){
             return true;
         }
-        else if(o != null && o.getClass() == getClass()){
-            return o.toString().equals(toString());
+        else if(oMv != null && oMv.getClass() == getClass()){
+            return oMv.toString().equals(toString());
         }
 
         return false;

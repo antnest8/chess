@@ -1,7 +1,6 @@
 package chess;
 
 import java.util.Collection;
-import java.util.Locale;
 import java.util.Objects;
 
 /**
@@ -84,12 +83,12 @@ public class ChessPiece {
     }
 
     @Override
-    public boolean equals(Object o){
-        if(o == this){
+    public boolean equals(Object oPce){
+        if(oPce == this){
             return true;
         }
-        else if(o != null && o.getClass() == getClass()){
-            return o.toString().equals(toString());
+        else if(oPce != null && oPce.getClass() == getClass()){
+            return oPce.toString().equals(toString());
         }
 
         return false;
