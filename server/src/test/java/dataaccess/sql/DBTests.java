@@ -4,6 +4,8 @@ import com.sun.jdi.InternalException;
 import dataaccess.*;
 import dataaccess.exceptions.DataAccessException;
 import model.AuthData;
+import model.LoginAttempt;
+import model.UserData;
 import org.junit.jupiter.api.*;
 
 import java.lang.reflect.Method;
@@ -104,8 +106,22 @@ public class DBTests {
 
     @Test
     @Order(6)
-    @DisplayName("Auth Add Persistence Test")
-
+    @DisplayName("User Disconnect Tests")
+    public void userDisconnectTests()throws ReflectiveOperationException{
+        Object dbmInstance = poisonConnection();
+        try {
+            Assertions.assertThrows(InternalException.class,
+                    ()->userDAO.createUser(new UserData("new_user", "this_is_not_a_password", "user@email.com")),
+                    "createUser does not throw when disconnected");
+            Assertions.assertThrows(InternalException.class,
+                    ()->userDAO.userPassCorrect(new LoginAttempt("new_user",  "this_is_not_a_password")),
+                    "userPassCorrect does not throw when disconnected");
+            Assertions.assertThrows(InternalException.class, ()->userDAO.userExists("new_user"),
+                    "userExists does not throw when disconnected");
+        }finally{
+            unpoisenConnection(dbmInstance);
+        }
+    }
 
 
 

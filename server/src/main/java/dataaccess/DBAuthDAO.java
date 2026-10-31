@@ -30,19 +30,19 @@ public class DBAuthDAO implements AuthDAO{
         }
     }
 
-    public void addAuth(AuthData auth) throws DataAccessException{
+    public void addAuth(AuthData auth){
         try(var conn = DatabaseManager.getConnection()){
             try(var preppedState = conn.prepareStatement("INSERT INTO auth(token, username) VALUES (?,?);")){
                 preppedState.setString(1, auth.authToken());
                 preppedState.setString(2, auth.username());
                 preppedState.executeUpdate();
             }
-        }catch (SQLException ex){
+        }catch (SQLException | DataAccessException ex){
             throw new InternalException("Error: auth aggregation internal error.");
         }
     }
 
-    public AuthData getAuth(String authToken) throws DataAccessException{
+    public AuthData getAuth(String authToken){
         try(var conn = DatabaseManager.getConnection()){
             try(var preppedState = conn.prepareStatement("SELECT token, username FROM auth WHERE token = ?;")){
                 preppedState.setString(1, authToken);
@@ -51,7 +51,7 @@ public class DBAuthDAO implements AuthDAO{
                     return new AuthData(rs.getString("username"), rs.getString("token"));
                 }
             }
-        }catch (SQLException ex){
+        }catch (SQLException | DataAccessException ex){
             throw new InternalException("Error: auth retrieval internal error.");
         }
     }
