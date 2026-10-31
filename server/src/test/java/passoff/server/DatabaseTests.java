@@ -1,6 +1,8 @@
 package passoff.server;
 
 import chess.ChessGame;
+import com.sun.jdi.InternalException;
+import dataaccess.*;
 import org.junit.jupiter.api.*;
 import passoff.model.*;
 import server.Server;
@@ -141,6 +143,48 @@ public class DatabaseTests {
             loadFromResources.invoke(obj);
         }
     }
+
+    @Test
+    @Order(4)
+    @DisplayName("Fail on configuration")
+    public void configurationFailures() throws ReflectiveOperationException{
+
+        Properties fakeDbProperties = new Properties();
+        fakeDbProperties.setProperty("db.name", UUID.randomUUID().toString());
+        fakeDbProperties.setProperty("db.user", UUID.randomUUID().toString());
+        fakeDbProperties.setProperty("db.password", UUID.randomUUID().toString());
+        fakeDbProperties.setProperty("db.host", "localhost");
+        fakeDbProperties.setProperty("db.port", "100000");
+
+        Class<?> databaseManagerClass = findDatabaseManager();
+        Method loadPropertiesMethod = databaseManagerClass.getDeclaredMethod("loadProperties", Properties.class);
+        loadPropertiesMethod.setAccessible(true);
+        Object obj = databaseManagerClass.getDeclaredConstructor().newInstance();
+        loadPropertiesMethod.invoke(obj, fakeDbProperties);
+        try{
+            Assertions.assertThrows(InternalException.class, DBAuthDAO::new,"DBAuthDAO failed to fail");
+            Assertions.assertThrows(InternalException.class, DBUserDAO::new, "DBAuthDAO failed to fail");
+            Assertions.assertThrows(InternalException.class, DBGameDAO::new,"DBAuthDAO failed to fail");
+        } finally {
+            Method loadFromResources = databaseManagerClass.getDeclaredMethod("loadPropertiesFromResources");
+            loadFromResources.setAccessible(true);
+            loadFromResources.invoke(obj);
+        }
+    }
+
+    @Test
+    @Order(5)
+    @DisplayName("Authentication Logout")
+    public void authenticationLogout(){
+
+        TestAuthResult regResult = serverFacade.register(TEST_USER);
+        String auth = regResult.getAuthToken();
+
+        AuthDAO personalAuthenicator = new DBAuthDAO();
+        Assertions.assertDoesNotThrow(()->personalAuthenicator.deleteAuth(auth));
+
+    }
+
 
     private int getDatabaseRows() {
         AtomicInteger rows = new AtomicInteger();

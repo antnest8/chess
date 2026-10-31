@@ -78,10 +78,8 @@ public class DBAuthDAO implements AuthDAO{
                     return rs.getBoolean(1);
                 }
             }
-        }catch (SQLException ex){
+        }catch (SQLException | DataAccessException ex){
             throw new InternalException("Error: auth validation internal error");
-        }catch (DataAccessException ex){
-            throw new InternalException("Error: internal auth error");
         }
     }
 
