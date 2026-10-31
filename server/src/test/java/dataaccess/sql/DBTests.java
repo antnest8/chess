@@ -11,26 +11,26 @@ import java.util.Properties;
 import java.util.UUID;
 
 public class DBTests {
-    private static final AuthDAO authDAO = new DBAuthDAO();
-    private static final UserDAO userDAO = new DBUserDAO();
-    private static final GameDAO gameDAO = new DBGameDAO();
+    private static final AuthDAO AUTH_DAO = new DBAuthDAO();
+    private static final UserDAO USER_DAO = new DBUserDAO();
+    private static final GameDAO GAME_DAO = new DBGameDAO();
     private static Class<?> databaseMan;
 
 
     @BeforeEach
     public void setup(){
-        authDAO.clear();
-        userDAO.clear();
-        gameDAO.clear();
+        AUTH_DAO.clear();
+        USER_DAO.clear();
+        GAME_DAO.clear();
     }
 
     @Test
     @Order(1)
     @DisplayName("Clear Test")
     public void clearWithoutErrors(){
-        Assertions.assertDoesNotThrow(authDAO::clear);
-        Assertions.assertDoesNotThrow(userDAO::clear);
-        Assertions.assertDoesNotThrow(gameDAO::clear);
+        Assertions.assertDoesNotThrow(AUTH_DAO::clear);
+        Assertions.assertDoesNotThrow(USER_DAO::clear);
+        Assertions.assertDoesNotThrow(GAME_DAO::clear);
 
     }
 
@@ -52,9 +52,9 @@ public class DBTests {
         Object obj = databaseManagerClass.getDeclaredConstructor().newInstance();
         loadPropertiesMethod.invoke(obj, fakeDbProperties);
         try{
-            Assertions.assertThrows(InternalException.class, authDAO::clear);
-            Assertions.assertThrows(InternalException.class, userDAO::clear);
-            Assertions.assertThrows(InternalException.class, gameDAO::clear);
+            Assertions.assertThrows(InternalException.class, AUTH_DAO::clear);
+            Assertions.assertThrows(InternalException.class, USER_DAO::clear);
+            Assertions.assertThrows(InternalException.class, GAME_DAO::clear);
 
         }finally {
             Method loadFromResources = databaseManagerClass.getDeclaredMethod("loadPropertiesFromResources");
@@ -89,13 +89,13 @@ public class DBTests {
         Object dbmInstance = poisonConnection();
         try {
             String authToken = UUID.randomUUID().toString();
-            Assertions.assertThrows(InternalException.class, ()->authDAO.addAuth(new AuthData("new_user", authToken)),
+            Assertions.assertThrows(InternalException.class, ()-> AUTH_DAO.addAuth(new AuthData("new_user", authToken)),
                     "addAuth does not throw when disconnected");
-            Assertions.assertThrows(InternalException.class, ()->authDAO.getAuth(authToken),
+            Assertions.assertThrows(InternalException.class, ()-> AUTH_DAO.getAuth(authToken),
                     "getAuth does not throw when disconnected");
-            Assertions.assertThrows(InternalException.class, ()->authDAO.authValid(authToken),
+            Assertions.assertThrows(InternalException.class, ()-> AUTH_DAO.authValid(authToken),
                     "authValid does not throw when disconnected");
-            Assertions.assertThrows(InternalException.class, ()->authDAO.deleteAuth(authToken),
+            Assertions.assertThrows(InternalException.class, ()-> AUTH_DAO.deleteAuth(authToken),
                     "deleteAuth does not throw when disconnected");
         }finally{
             unpoisenConnection(dbmInstance);
@@ -109,12 +109,12 @@ public class DBTests {
         Object dbmInstance = poisonConnection();
         try {
             Assertions.assertThrows(InternalException.class,
-                    ()->userDAO.createUser(new UserData("new_user", "this_is_not_a_password", "user@email.com")),
+                    ()-> USER_DAO.createUser(new UserData("new_user", "this_is_not_a_password", "user@email.com")),
                     "createUser does not throw when disconnected");
             Assertions.assertThrows(InternalException.class,
-                    ()->userDAO.userPassCorrect(new LoginAttempt("new_user",  "this_is_not_a_password")),
+                    ()-> USER_DAO.userPassCorrect(new LoginAttempt("new_user",  "this_is_not_a_password")),
                     "userPassCorrect does not throw when disconnected");
-            Assertions.assertThrows(InternalException.class, ()->userDAO.userExists("new_user"),
+            Assertions.assertThrows(InternalException.class, ()-> USER_DAO.userExists("new_user"),
                     "userExists does not throw when disconnected");
         }finally{
             unpoisenConnection(dbmInstance);
@@ -128,13 +128,13 @@ public class DBTests {
         Object dbmInstance = poisonConnection();
         try {
             Assertions.assertThrows(InternalException.class,
-                    ()->gameDAO.createGame("new_game"), "createGame does not throw when disconnected");
+                    ()-> GAME_DAO.createGame("new_game"), "createGame does not throw when disconnected");
             Assertions.assertThrows(InternalException.class,
-                    ()->gameDAO.getGame(1), "getGame does not throw when disconnected");
+                    ()-> GAME_DAO.getGame(1), "getGame does not throw when disconnected");
             Assertions.assertThrows(InternalException.class,
-                    ()->gameDAO.updateGame(new GameData(1, null, "new_user", "new_game", null)),
+                    ()-> GAME_DAO.updateGame(new GameData(1, null, "new_user", "new_game", null)),
                     "updateGame does not throw when disconnected");
-            Assertions.assertThrows(InternalException.class, gameDAO::listGames,
+            Assertions.assertThrows(InternalException.class, GAME_DAO::listGames,
                     "listGames does not throw when disconnected");
         }finally{
             unpoisenConnection(dbmInstance);
@@ -146,7 +146,7 @@ public class DBTests {
     @DisplayName("addAuth no error test")
     public void addAuthTest(){
         String token = UUID.randomUUID().toString();
-        Assertions.assertDoesNotThrow(()->authDAO.addAuth(new AuthData("new_user", token)));
+        Assertions.assertDoesNotThrow(()-> AUTH_DAO.addAuth(new AuthData("new_user", token)));
 
     }
 
@@ -155,9 +155,9 @@ public class DBTests {
     @DisplayName("authTests no error test")
     public void authExistsTest(){
         String token = UUID.randomUUID().toString();
-        authDAO.addAuth(new AuthData("new_user", token));
-        Assertions.assertTrue(authDAO.authValid(token));
-        Assertions.assertEquals(authDAO.getAuth(token), new AuthData("new_user", token));
+        AUTH_DAO.addAuth(new AuthData("new_user", token));
+        Assertions.assertTrue(AUTH_DAO.authValid(token));
+        Assertions.assertEquals(AUTH_DAO.getAuth(token), new AuthData("new_user", token));
     }
 
     @Test
@@ -165,59 +165,59 @@ public class DBTests {
     @DisplayName("Auth Deletion Tests")
     public void authDeletionTest(){
         String token = UUID.randomUUID().toString();
-        authDAO.addAuth(new AuthData("new_user", token));
-        Assertions.assertTrue(authDAO.authValid(token));
-        authDAO.deleteAuth(token);
-        Assertions.assertFalse(authDAO.authValid(token));
+        AUTH_DAO.addAuth(new AuthData("new_user", token));
+        Assertions.assertTrue(AUTH_DAO.authValid(token));
+        AUTH_DAO.deleteAuth(token);
+        Assertions.assertFalse(AUTH_DAO.authValid(token));
     }
 
     @Test
     @Order(11)
     @DisplayName("User Add Test")
     public void userAddTest(){
-        Assertions.assertFalse(userDAO.userPassCorrect(new LoginAttempt("new_user", "not_a_password")));
-        Assertions.assertDoesNotThrow(()->userDAO.createUser(
+        Assertions.assertFalse(USER_DAO.userPassCorrect(new LoginAttempt("new_user", "not_a_password")));
+        Assertions.assertDoesNotThrow(()-> USER_DAO.createUser(
                 new UserData("new_user", "not_a_password", "user@email.com")));
-        Assertions.assertTrue(userDAO.userExists("new_user"));
-        Assertions.assertThrows(UsernameTakenException.class, ()->userDAO.createUser(
+        Assertions.assertTrue(USER_DAO.userExists("new_user"));
+        Assertions.assertThrows(UsernameTakenException.class, ()-> USER_DAO.createUser(
                 new UserData("new_user", "not_a_password", "user@email.com")
         ));
-        Assertions.assertTrue(userDAO.userPassCorrect(new LoginAttempt("new_user", "not_a_password")));
+        Assertions.assertTrue(USER_DAO.userPassCorrect(new LoginAttempt("new_user", "not_a_password")));
     }
 
     @Test
     @Order(12)
     @DisplayName("Game Add Test")
     public void gameAddTest(){
-        Assertions.assertEquals(1, gameDAO.createGame("new_game"));
-        Assertions.assertFalse(gameDAO.listGames().isEmpty());
+        Assertions.assertEquals(1, GAME_DAO.createGame("new_game"));
+        Assertions.assertFalse(GAME_DAO.listGames().isEmpty());
         Assertions.assertEquals(new GameData(1,null,null,"new_game", null),
-                gameDAO.getGame(1));
+                GAME_DAO.getGame(1));
     }
 
     @Test
     @Order(13)
     @DisplayName("Game Update Test")
     public void gameUpdateTest(){
-        Assertions.assertEquals(1, gameDAO.createGame("new_game"));
-        Assertions.assertDoesNotThrow(()->gameDAO.updateGame(
+        Assertions.assertEquals(1, GAME_DAO.createGame("new_game"));
+        Assertions.assertDoesNotThrow(()-> GAME_DAO.updateGame(
                 new GameData(1, "new_user", null, "new_game", null)
         ));
         Assertions.assertEquals(new GameData(1,"new_user",null,"new_game", null),
-                gameDAO.getGame(1));
-        Assertions.assertDoesNotThrow(()->gameDAO.updateGame(
+                GAME_DAO.getGame(1));
+        Assertions.assertDoesNotThrow(()-> GAME_DAO.updateGame(
                 new GameData(1, "new_user", "newer_user", "new_game", null)
         ));
         Assertions.assertEquals(
                 new GameData(1,"new_user","newer_user","new_game", null),
-                gameDAO.getGame(1));
+                GAME_DAO.getGame(1));
     }
 
     @Test
     @Order(14)
     @DisplayName("Game Not Found Test")
     public void gameNotFound(){
-        Assertions.assertThrows(BadDataRequest.class, ()->gameDAO.getGame(10));
+        Assertions.assertThrows(BadDataRequest.class, ()-> GAME_DAO.getGame(10));
     }
 
     private Object poisonConnection() throws ReflectiveOperationException{
