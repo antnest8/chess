@@ -3,13 +3,13 @@ package dataaccess.sql;
 import com.sun.jdi.InternalException;
 import dataaccess.*;
 import dataaccess.exceptions.DataAccessException;
-import model.AuthData;
-import model.GameData;
-import model.LoginAttempt;
-import model.UserData;
+import dataaccess.exceptions.UsernameTakenException;
+import model.*;
 import org.junit.jupiter.api.*;
 
 import java.lang.reflect.Method;
+import java.sql.SQLException;
+import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -144,6 +144,84 @@ public class DBTests {
         }
     }
 
+    @Test
+    @Order(8)
+    @DisplayName("addAuth no error test")
+    public void addAuthTest(){
+        String token = UUID.randomUUID().toString();
+        Assertions.assertDoesNotThrow(()->authDAO.addAuth(new AuthData("new_user", token)));
+
+    }
+
+    @Test
+    @Order(9)
+    @DisplayName("authTests no error test")
+    public void authExistsTest(){
+        String token = UUID.randomUUID().toString();
+        authDAO.addAuth(new AuthData("new_user", token));
+        Assertions.assertTrue(authDAO.authValid(token));
+        Assertions.assertEquals(authDAO.getAuth(token), new AuthData("new_user", token));
+    }
+
+    @Test
+    @Order(10)
+    @DisplayName("Auth Deletion Tests")
+    public void authDeletionTest(){
+        String token = UUID.randomUUID().toString();
+        authDAO.addAuth(new AuthData("new_user", token));
+        Assertions.assertTrue(authDAO.authValid(token));
+        authDAO.deleteAuth(token);
+        Assertions.assertFalse(authDAO.authValid(token));
+    }
+
+    @Test
+    @Order(11)
+    @DisplayName("User Add Test")
+    public void userAddTest(){
+        Assertions.assertFalse(userDAO.userPassCorrect(new LoginAttempt("new_user", "not_a_password")));
+        Assertions.assertDoesNotThrow(()->userDAO.createUser(
+                new UserData("new_user", "not_a_password", "user@email.com")));
+        Assertions.assertTrue(userDAO.userExists("new_user"));
+        Assertions.assertThrows(UsernameTakenException.class, ()->userDAO.createUser(
+                new UserData("new_user", "not_a_password", "user@email.com")
+        ));
+        Assertions.assertTrue(userDAO.userPassCorrect(new LoginAttempt("new_user", "not_a_password")));
+    }
+
+    @Test
+    @Order(12)
+    @DisplayName("Game Add Test")
+    public void gameAddTest(){
+        Assertions.assertEquals(1, gameDAO.createGame("new_game"));
+        Assertions.assertFalse(gameDAO.listGames().isEmpty());
+        Assertions.assertEquals(new GameData(1,null,null,"new_game", null),
+                gameDAO.getGame(1));
+    }
+
+    @Test
+    @Order(13)
+    @DisplayName("Game Update Test")
+    public void gameUpdateTest(){
+        Assertions.assertEquals(1, gameDAO.createGame("new_game"));
+        Assertions.assertDoesNotThrow(()->gameDAO.updateGame(
+                new GameData(1, "new_user", null, "new_game", null)
+        ));
+        Assertions.assertEquals(new GameData(1,"new_user",null,"new_game", null),
+                gameDAO.getGame(1));
+        Assertions.assertDoesNotThrow(()->gameDAO.updateGame(
+                new GameData(1, "new_user", "newer_user", "new_game", null)
+        ));
+        Assertions.assertEquals(
+                new GameData(1,"new_user","newer_user","new_game", null),
+                gameDAO.getGame(1));
+    }
+
+    @Test
+    @Order(14)
+    @DisplayName("Game Not Found Test")
+    public void gameNotFound(){
+        Assertions.assertThrows(BadDataRequest.class, ()->gameDAO.getGame(10));
+    }
 
     private Object poisonConnection() throws ReflectiveOperationException{
         Properties fakeDbProperties = new Properties();

@@ -32,7 +32,7 @@ public class DBUserDAO implements UserDAO{
             throw new InternalException("Error: cannot clear user data.");
         }
     }
-    public void createUser(UserData user) throws DataAccessException{
+    public void createUser(UserData user) throws UsernameTakenException{
         try(var conn = DatabaseManager.getConnection()){
             if(!userExists(user.username())) {
                 try (var preppedState = conn.prepareStatement("INSERT INTO user(username, password, email) VALUES (?,?,?);")) {
@@ -50,7 +50,7 @@ public class DBUserDAO implements UserDAO{
             throw new InternalException("Error: user aggregation internal error.");
         }
     }
-    public boolean userPassCorrect(LoginAttempt login) throws DataAccessException{
+    public boolean userPassCorrect(LoginAttempt login){
         try(var conn = DatabaseManager.getConnection()){
             try(var preppedState = conn.prepareStatement("SELECT password FROM user WHERE username = ?;")){
                 preppedState.setString(1, login.username());
@@ -67,7 +67,7 @@ public class DBUserDAO implements UserDAO{
         }
     }
 
-    public boolean userExists(String name) throws DataAccessException{
+    public boolean userExists(String name){
         try(var conn = DatabaseManager.getConnection()){
             try(var preppedState = conn.prepareStatement("SELECT EXISTS(SELECT 1 FROM user WHERE username=?);")){
                 preppedState.setString(1, name);
