@@ -10,8 +10,8 @@ public class DBAuthDAO implements AuthDAO{
 
     private static final String AUTH_SCHEMA = """
         CREATE TABLE IF NOT EXISTS auth(
-            token NOT NULL CHAR(36),
-            username NOT NULL VARCHAR(255),
+            token CHAR(36) NOT NULL ,
+            username VARCHAR(255) NOT NULL,
             PRIMARY KEY (token)
         );
 """;
@@ -94,6 +94,7 @@ public class DBAuthDAO implements AuthDAO{
             }
         }
     }catch (SQLException | DataAccessException ex){
+        System.err.println("auth database config failed. reason: " + ex.getMessage());
             throw new RuntimeException("Error: configuration Error");
         }
     }

@@ -23,7 +23,7 @@ public class DBGameDAO implements GameDAO{
 
     //probably implement this completely later
     private static final String GAMEOBJ_SCHEMA = """
-            CREATE TABE IF NOT EXISTS gameobj(
+            CREATE TABLE IF NOT EXISTS gameobj(
             current_turn CHAR(5) NOT NULL,
             board TEXT NOT NULL,
             );
@@ -114,11 +114,14 @@ public class DBGameDAO implements GameDAO{
                 try (var preppedState = conn.prepareStatement(GAME_SCHEMA)) {
                     preppedState.executeUpdate();
                 }
+                /* --note: this is for the future--
                 try (var preppedState = conn.prepareStatement(GAMEOBJ_SCHEMA)) {
                     preppedState.executeUpdate();
                 }
+                */
             }
         }catch (SQLException | DataAccessException ex){
+            System.err.println("database configuration failed. Reason: " + ex.getMessage());
             throw new RuntimeException("Error: configuration Error");
         }
     }
