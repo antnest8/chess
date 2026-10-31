@@ -38,7 +38,7 @@ public class DBAuthDAO {
                 preppedState.executeUpdate();
             }
         }catch (SQLException ex){
-            throw new DataAccessException("Error: cannot clear auth data.");
+            throw new DataAccessException("Error: auth aggregation internal error.");
         }
     }
 
@@ -52,7 +52,7 @@ public class DBAuthDAO {
                 }
             }
         }catch (SQLException ex){
-            throw new DataAccessException("Error: cannot clear auth data.");
+            throw new DataAccessException("Error: auth retrieval internal error.");
         }
     }
 
@@ -63,7 +63,23 @@ public class DBAuthDAO {
                 preppedState.executeUpdate();
             }
         }catch (SQLException ex){
-            throw new DataAccessException("Error: cannot clear auth data.");
+            throw new DataAccessException("Error: auth deletion internal error.");
+        }
+    }
+
+    //we are going to do this instead of just selecting the row because it doesn't send unnecessary -
+    // - user data to the service layer.
+    public boolean authValid(String authToken) throws DataAccessException{
+        try(var conn = DatabaseManager.getConnection()){
+            try(var preppedState = conn.prepareStatement("SELECT EXISTS(SELECT 1 FROM auth WHERE token=?);")){
+                preppedState.setString(1, authToken);
+                try(var rs = preppedState.executeQuery()){
+                    rs.next();
+                    return rs.getBoolean(1);
+                }
+            }
+        }catch (SQLException ex){
+            throw new DataAccessException("Error: auth validation internal error");
         }
     }
 
