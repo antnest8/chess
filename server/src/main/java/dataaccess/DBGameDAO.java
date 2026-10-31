@@ -71,10 +71,11 @@ public class DBGameDAO implements GameDAO{
     public void updateGame(GameData data){
         try(var conn = DatabaseManager.getConnection()){
             try(var preppedState = conn.prepareStatement("UPDATE game(white_user, black_user, name) VALUES (?,?,?) WHERE id=?")){
-                preppedState.setString(1, !data.whiteUsername().isBlank() ? data.whiteUsername() : null);
-                preppedState.setString(2, !data.blackUsername().isBlank() ? data.blackUsername() : null);
+                preppedState.setString(1, data.whiteUsername());
+                preppedState.setString(2, data.blackUsername());
                 preppedState.setString(3, data.gameName());
                 preppedState.setInt(4, data.gameID());
+                preppedState.executeUpdate();
             }
         }catch (DataAccessException | SQLException ex){
             throw new RuntimeException("Error: internal game fetch error");
