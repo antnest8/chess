@@ -41,6 +41,20 @@ public class DBAuthDAO {
         }
     }
 
+    public AuthData getAuth(String authToken) throws DataAccessException{
+        try(var conn = DatabaseManager.getConnection()){
+            try(var preppedState = conn.prepareStatement("SELECT token, username FROM auth WHERE token = ?;")){
+                preppedState.setString(1, authToken);
+                try(var rs = preppedState.executeQuery()){
+                    rs.next();
+                    return new AuthData(rs.getString("token"), rs.getString("username"));
+                }
+            }
+        }catch (SQLException ex){
+            throw new DataAccessException("Error: cannot clear auth data.");
+        }
+    }
+
     private void configureDB() throws DataAccessException {
         DatabaseManager.createDatabase();
         try(var conn = DatabaseManager.getConnection()){
