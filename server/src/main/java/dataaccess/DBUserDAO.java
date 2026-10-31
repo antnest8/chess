@@ -53,8 +53,11 @@ public class DBUserDAO implements UserDAO{
             try(var preppedState = conn.prepareStatement("SELECT password FROM user WHERE username = ?;")){
                 preppedState.setString(1, login.username());
                 try(var rs = preppedState.executeQuery()){
-                    rs.next();
-                    return BCrypt.checkpw(login.password() ,rs.getString("password"));
+                    if(rs.next()) {
+                        return BCrypt.checkpw(login.password(), rs.getString("password"));
+                    }else{
+                        return false;
+                    }
                 }
             }
         }catch (SQLException ex){

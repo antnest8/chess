@@ -3,7 +3,6 @@ package dataaccess;
 import dataaccess.exceptions.DataAccessException;
 import model.AuthData;
 
-import javax.xml.crypto.Data;
 import java.sql.SQLException;
 
 public class DBAuthDAO implements AuthDAO{

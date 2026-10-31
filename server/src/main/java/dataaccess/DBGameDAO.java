@@ -99,7 +99,7 @@ public class DBGameDAO implements GameDAO{
 
     public void clear(){
         try(var conn = DatabaseManager.getConnection()){
-            try(var preppedState = conn.prepareStatement("TRUNCATE TABLE game, gameobj;")){
+            try(var preppedState = conn.prepareStatement("TRUNCATE TABLE game;")){
                 preppedState.executeUpdate();
             }
         }catch (SQLException | DataAccessException ex){
