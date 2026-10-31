@@ -4,6 +4,7 @@ import com.sun.jdi.InternalException;
 import dataaccess.*;
 import dataaccess.exceptions.DataAccessException;
 import model.AuthData;
+import model.GameData;
 import model.LoginAttempt;
 import model.UserData;
 import org.junit.jupiter.api.*;
@@ -123,6 +124,25 @@ public class DBTests {
         }
     }
 
+    @Test
+    @Order(7)
+    @DisplayName("Game Disconnect Tests")
+    public void gameDisconnectTests()throws ReflectiveOperationException{
+        Object dbmInstance = poisonConnection();
+        try {
+            Assertions.assertThrows(InternalException.class,
+                    ()->gameDAO.createGame("new_game"), "createGame does not throw when disconnected");
+            Assertions.assertThrows(InternalException.class,
+                    ()->gameDAO.getGame(1), "getGame does not throw when disconnected");
+            Assertions.assertThrows(InternalException.class,
+                    ()->gameDAO.updateGame(new GameData(1, null, "new_user", "new_game", null)),
+                    "updateGame does not throw when disconnected");
+            Assertions.assertThrows(InternalException.class, gameDAO::listGames,
+                    "listGames does not throw when disconnected");
+        }finally{
+            unpoisenConnection(dbmInstance);
+        }
+    }
 
 
     private Object poisonConnection() throws ReflectiveOperationException{
