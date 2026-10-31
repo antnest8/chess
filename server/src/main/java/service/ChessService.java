@@ -19,7 +19,7 @@ public class ChessService {
     private UserDAO userData;
     private AuthDAO authData;
 
-    public ChessService() throws DataAccessException {
+    public ChessService() {
         this.gameData = new DBGameDAO();
         this.userData = new DBUserDAO();
         this.authData = new DBAuthDAO();
