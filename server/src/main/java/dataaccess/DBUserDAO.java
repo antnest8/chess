@@ -19,17 +19,17 @@ public class DBUserDAO implements UserDAO{
             );
             """;
 
-    DBUserDAO() throws DataAccessException {
+    public DBUserDAO() {
         configureDB();
     }
 
-    public void clear() throws DataAccessException{
+    public void clear(){
         try(var conn = DatabaseManager.getConnection()){
             try(var preppedState = conn.prepareStatement("TRUNCATE TABLE user;")){
                 preppedState.executeUpdate();
             }
-        }catch (SQLException ex){
-            throw new DataAccessException("Error: cannot clear user data.");
+        }catch (SQLException | DataAccessException ex){
+            throw new RuntimeException("Error: cannot clear user data.");
         }
     }
     public void createUser(UserData user) throws DataAccessException{
@@ -76,14 +76,16 @@ public class DBUserDAO implements UserDAO{
         }
     }
 
-    private void configureDB() throws DataAccessException{
+    private void configureDB() {
+    try{
         DatabaseManager.createDatabase();
-        try(var conn = DatabaseManager.getConnection()){
-            try(var preppedState = conn.prepareStatement(USER_SCHEMA)){
+        try (var conn = DatabaseManager.getConnection()) {
+            try (var preppedState = conn.prepareStatement(USER_SCHEMA)) {
                 preppedState.executeUpdate();
             }
-        } catch (SQLException ex){
-            throw new DataAccessException("Error: configuration Error");
+        }
+    }catch (SQLException | DataAccessException ex){
+            throw new RuntimeException("Error: configuration Error");
         }
     }
 

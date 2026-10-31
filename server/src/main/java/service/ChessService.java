@@ -19,10 +19,10 @@ public class ChessService {
     private UserDAO userData;
     private AuthDAO authData;
 
-    public ChessService(){
-        this.gameData = new MemoryGameDAO();
-        this.userData = new MemoryUserDAO();
-        this.authData = new MemoryAuthDAO();
+    public ChessService() throws DataAccessException {
+        this.gameData = new DBGameDAO();
+        this.userData = new DBUserDAO();
+        this.authData = new DBAuthDAO();
     }
 
     public void clear(){

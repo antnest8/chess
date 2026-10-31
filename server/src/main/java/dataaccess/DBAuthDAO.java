@@ -16,17 +16,17 @@ public class DBAuthDAO implements AuthDAO{
         );
 """;
 
-    DBAuthDAO() throws DataAccessException{
+    public DBAuthDAO(){
         configureDB();
     }
 
-    public void clear() throws DataAccessException {
+    public void clear(){
         try(var conn = DatabaseManager.getConnection()){
             try(var preppedState = conn.prepareStatement("TRUNCATE TABLE auth;")){
                 preppedState.executeUpdate();
             }
-        }catch (SQLException ex){
-            throw new DataAccessException("Error: cannot clear auth data.");
+        }catch (SQLException | DataAccessException ex){
+            throw new RuntimeException("Error: internal data error while clearing.");
         }
     }
 
@@ -85,14 +85,16 @@ public class DBAuthDAO implements AuthDAO{
         }
     }
 
-    private void configureDB() throws DataAccessException {
+    private void configureDB(){
+    try{
         DatabaseManager.createDatabase();
         try(var conn = DatabaseManager.getConnection()){
             try(var preppedState = conn.prepareStatement(AUTH_SCHEMA)){
                 preppedState.executeUpdate();
             }
-        } catch (SQLException ex){
-            throw new DataAccessException("Error: configuration Error");
+        }
+    }catch (SQLException | DataAccessException ex){
+            throw new RuntimeException("Error: configuration Error");
         }
     }
 }

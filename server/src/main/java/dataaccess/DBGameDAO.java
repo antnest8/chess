@@ -29,7 +29,7 @@ public class DBGameDAO implements GameDAO{
             );
             """;
 
-    DBGameDAO(){
+    public DBGameDAO(){
         configureDB();
     }
 

@@ -5,7 +5,7 @@ import model.LoginAttempt;
 import model.UserData;
 
 public interface UserDAO {
-    void clear() throws DataAccessException;
+    void clear();
     void createUser(UserData user) throws DataAccessException;
     boolean userPassCorrect(LoginAttempt login) throws DataAccessException;
     boolean userExists(String name) throws DataAccessException;
