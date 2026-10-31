@@ -92,7 +92,6 @@ public class DBAuthDAO implements AuthDAO{
             }
         }
     }catch (SQLException | DataAccessException ex){
-        System.err.println("auth database config failed. reason: " + ex.getMessage());
             throw new InternalException("Error: configuration Error");
         }
     }

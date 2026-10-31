@@ -89,7 +89,6 @@ public class DBGameDAO implements GameDAO{
                 preppedState.executeUpdate();
             }
         }catch (DataAccessException | SQLException ex){
-            System.err.println("Unexpected error updating game. source: " + ex.getMessage());
             throw new InternalException("Error: internal game fetch error");
         }
     }
@@ -134,7 +133,6 @@ public class DBGameDAO implements GameDAO{
                 */
             }
         }catch (SQLException | DataAccessException ex){
-            System.err.println("database configuration failed. Reason: " + ex.getMessage());
             throw new InternalException("Error: configuration Error");
         }
     }
