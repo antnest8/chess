@@ -6,7 +6,7 @@ import model.AuthData;
 import javax.xml.crypto.Data;
 import java.sql.SQLException;
 
-public class DBAuthDAO {
+public class DBAuthDAO implements AuthDAO{
 
     private static final String AUTH_SCHEMA = """
         CREATE TABLE IF NOT EXISTS auth(
