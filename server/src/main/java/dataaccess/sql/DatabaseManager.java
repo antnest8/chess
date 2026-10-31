@@ -1,4 +1,4 @@
-package dataaccess;
+package dataaccess.sql;
 
 import dataaccess.exceptions.DataAccessException;
 

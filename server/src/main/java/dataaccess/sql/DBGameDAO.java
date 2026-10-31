@@ -1,8 +1,8 @@
-package dataaccess;
+package dataaccess.sql;
 
 import com.sun.jdi.InternalException;
+import dataaccess.GameDAO;
 import dataaccess.exceptions.DataAccessException;
-import model.AuthData;
 import model.BadDataRequest;
 import model.GameData;
 
@@ -13,7 +13,7 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class DBGameDAO implements GameDAO{
+public class DBGameDAO implements GameDAO {
     private static final String GAME_SCHEMA = """
             CREATE TABLE IF NOT EXISTS game(
             id INT NOT NULL AUTO_INCREMENT,

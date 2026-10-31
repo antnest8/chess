@@ -1,6 +1,7 @@
-package dataaccess;
+package dataaccess.sql;
 
 import com.sun.jdi.InternalException;
+import dataaccess.UserDAO;
 import dataaccess.exceptions.DataAccessException;
 import dataaccess.exceptions.UsernameTakenException;
 import model.LoginAttempt;
@@ -9,7 +10,7 @@ import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.SQLException;
 
-public class DBUserDAO implements UserDAO{
+public class DBUserDAO implements UserDAO {
     private static final String USER_SCHEMA = """
             CREATE TABLE IF NOT EXISTS user(
                 username VARCHAR(255) NOT NULL,

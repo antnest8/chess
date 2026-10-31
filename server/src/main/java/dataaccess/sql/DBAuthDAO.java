@@ -1,12 +1,13 @@
-package dataaccess;
+package dataaccess.sql;
 
 import com.sun.jdi.InternalException;
+import dataaccess.AuthDAO;
 import dataaccess.exceptions.DataAccessException;
 import model.AuthData;
 
 import java.sql.SQLException;
 
-public class DBAuthDAO implements AuthDAO{
+public class DBAuthDAO implements AuthDAO {
 
     private static final String AUTH_SCHEMA = """
         CREATE TABLE IF NOT EXISTS auth(
