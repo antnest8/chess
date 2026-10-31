@@ -10,5 +10,4 @@ public interface GameDAO {
     void updateGame(GameData data);
     Collection<GameData> listGames();
     void clear();
-    //void deleteGame(int gameID);
 }
