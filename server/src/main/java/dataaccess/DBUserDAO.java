@@ -1,13 +1,14 @@
 package dataaccess;
 
 import dataaccess.exceptions.DataAccessException;
+import model.AuthData;
 import model.LoginAttempt;
 import model.UserData;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.SQLException;
 
-public class DBUserDAO {
+public class DBUserDAO implements UserDAO{
     private static final String USER_SCHEMA = """
             CREATE TABLE IF NOT EXISTS user(
                 username VARCHAR(255) NOT NULL,
@@ -21,7 +22,7 @@ public class DBUserDAO {
         configureDB();
     }
 
-    void clear() throws DataAccessException{
+    public void clear() throws DataAccessException{
         try(var conn = DatabaseManager.getConnection()){
             try(var preppedState = conn.prepareStatement("TRUNCATE TABLE user;")){
                 preppedState.executeUpdate();
@@ -30,7 +31,7 @@ public class DBUserDAO {
             throw new DataAccessException("Error: cannot clear user data.");
         }
     }
-    void createUser(UserData user) throws DataAccessException{
+    public void createUser(UserData user) throws DataAccessException{
         try(var conn = DatabaseManager.getConnection()){
             try(var preppedState = conn.prepareStatement("INSERT INTO user(username, password, email) VALUES (?,?,?);")){
                 preppedState.setString(1, user.username());
@@ -42,11 +43,32 @@ public class DBUserDAO {
             throw new DataAccessException("Error: user aggregation internal error.");
         }
     }
-    boolean userPassCorrect(LoginAttempt login) throws DataAccessException{
-
+    public boolean userPassCorrect(LoginAttempt login) throws DataAccessException{
+        try(var conn = DatabaseManager.getConnection()){
+            try(var preppedState = conn.prepareStatement("SELECT password FROM user WHERE username = ?;")){
+                preppedState.setString(1, login.username());
+                try(var rs = preppedState.executeQuery()){
+                    rs.next();
+                    return BCrypt.checkpw(login.password() ,rs.getString("password"));
+                }
+            }
+        }catch (SQLException ex){
+            throw new DataAccessException("Error: login check internal error.");
+        }
     }
-    boolean userExists(String name) throws DataAccessException{
 
+    public boolean userExists(String name) throws DataAccessException{
+        try(var conn = DatabaseManager.getConnection()){
+            try(var preppedState = conn.prepareStatement("SELECT EXISTS(SELECT 1 FROM user WHERE username=?);")){
+                preppedState.setString(1, name);
+                try(var rs = preppedState.executeQuery()){
+                    rs.next();
+                    return rs.getBoolean(1);
+                }
+            }
+        }catch (SQLException ex){
+            throw new DataAccessException("Error: auth validation internal error");
+        }
     }
 
     private void configureDB() throws DataAccessException{
@@ -59,5 +81,5 @@ public class DBUserDAO {
             throw new DataAccessException("Error: configuration Error");
         }
     }
-    }
+
 }
