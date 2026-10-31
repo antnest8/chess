@@ -1,5 +1,6 @@
 package dataaccess;
 
+import com.sun.jdi.InternalException;
 import dataaccess.exceptions.DataAccessException;
 import model.AuthData;
 
@@ -25,7 +26,7 @@ public class DBAuthDAO implements AuthDAO{
                 preppedState.executeUpdate();
             }
         }catch (SQLException | DataAccessException ex){
-            throw new RuntimeException("Error: internal data error while clearing.");
+            throw new InternalException("Error: internal data error while clearing.");
         }
     }
 
@@ -37,7 +38,7 @@ public class DBAuthDAO implements AuthDAO{
                 preppedState.executeUpdate();
             }
         }catch (SQLException ex){
-            throw new DataAccessException("Error: auth aggregation internal error.");
+            throw new InternalException("Error: auth aggregation internal error.");
         }
     }
 
@@ -47,11 +48,11 @@ public class DBAuthDAO implements AuthDAO{
                 preppedState.setString(1, authToken);
                 try(var rs = preppedState.executeQuery()){
                     rs.next();
-                    return new AuthData(rs.getString("token"), rs.getString("username"));
+                    return new AuthData(rs.getString("username"), rs.getString("token"));
                 }
             }
         }catch (SQLException ex){
-            throw new DataAccessException("Error: auth retrieval internal error.");
+            throw new InternalException("Error: auth retrieval internal error.");
         }
     }
 
@@ -62,7 +63,7 @@ public class DBAuthDAO implements AuthDAO{
                 preppedState.executeUpdate();
             }
         }catch (SQLException | DataAccessException ex){
-            throw new RuntimeException("Error: auth deletion internal error.");
+            throw new InternalException("Error: auth deletion internal error.");
         }
     }
 
@@ -78,9 +79,9 @@ public class DBAuthDAO implements AuthDAO{
                 }
             }
         }catch (SQLException ex){
-            throw new RuntimeException("Error: auth validation internal error");
+            throw new InternalException("Error: auth validation internal error");
         }catch (DataAccessException ex){
-            throw new RuntimeException("Error: internal auth error");
+            throw new InternalException("Error: internal auth error");
         }
     }
 
@@ -94,7 +95,7 @@ public class DBAuthDAO implements AuthDAO{
         }
     }catch (SQLException | DataAccessException ex){
         System.err.println("auth database config failed. reason: " + ex.getMessage());
-            throw new RuntimeException("Error: configuration Error");
+            throw new InternalException("Error: configuration Error");
         }
     }
 }

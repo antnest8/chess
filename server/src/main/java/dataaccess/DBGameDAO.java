@@ -1,12 +1,15 @@
 package dataaccess;
 
+import com.sun.jdi.InternalException;
 import dataaccess.exceptions.DataAccessException;
 import model.AuthData;
+import model.BadDataRequest;
 import model.GameData;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -47,7 +50,7 @@ public class DBGameDAO implements GameDAO{
                 return id;
             }
         }catch (SQLException | DataAccessException ex){
-            throw new RuntimeException("Error: game aggregation internal error.");
+            throw new InternalException("Error: game aggregation internal error.");
         }
     }
 
@@ -59,26 +62,35 @@ public class DBGameDAO implements GameDAO{
                     if(rs.next()) {
                         return parseSQLGame(rs, gameID);
                     }else{
-                        throw new NullPointerException("Error: Game not found!");
+                        throw new BadDataRequest("Error: Game not found!");
                     }
                 }
             }
         }catch (SQLException | DataAccessException ex){
-            throw new RuntimeException("Error: game retrieval internal error.");
+            throw new InternalException("Error: game retrieval internal error.");
         }
     }
 
     public void updateGame(GameData data){
         try(var conn = DatabaseManager.getConnection()){
-            try(var preppedState = conn.prepareStatement("UPDATE game(white_user, black_user, name) VALUES (?,?,?) WHERE id=?")){
-                preppedState.setString(1, data.whiteUsername());
-                preppedState.setString(2, data.blackUsername());
+            try(var preppedState = conn.prepareStatement("UPDATE game SET white_user=?, black_user=?, name=? WHERE id=?")){
+                if(data.whiteUsername() == null){
+                    preppedState.setNull(1, Types.VARCHAR);
+                }else{
+                    preppedState.setString(1, data.whiteUsername());
+                }
+                if(data.blackUsername() == null){
+                    preppedState.setNull(2, Types.VARCHAR);
+                }else{
+                    preppedState.setString(2, data.blackUsername());
+                }
                 preppedState.setString(3, data.gameName());
                 preppedState.setInt(4, data.gameID());
                 preppedState.executeUpdate();
             }
         }catch (DataAccessException | SQLException ex){
-            throw new RuntimeException("Error: internal game fetch error");
+            System.err.println("Unexpected error updating game. source: " + ex.getMessage());
+            throw new InternalException("Error: internal game fetch error");
         }
     }
 
@@ -94,7 +106,7 @@ public class DBGameDAO implements GameDAO{
                 }
             }
         }catch (SQLException | DataAccessException ex){
-            throw new RuntimeException("Error: game retrieval internal error.");
+            throw new InternalException("Error: game retrieval internal error.");
         }
     }
 
@@ -104,7 +116,7 @@ public class DBGameDAO implements GameDAO{
                 preppedState.executeUpdate();
             }
         }catch (SQLException | DataAccessException ex){
-            throw new RuntimeException("Error: cannot clear game data.");
+            throw new InternalException("Error: cannot clear game data.");
         }
     }
 
@@ -123,7 +135,7 @@ public class DBGameDAO implements GameDAO{
             }
         }catch (SQLException | DataAccessException ex){
             System.err.println("database configuration failed. Reason: " + ex.getMessage());
-            throw new RuntimeException("Error: configuration Error");
+            throw new InternalException("Error: configuration Error");
         }
     }
 

@@ -1,7 +1,9 @@
 package service;
 
 import com.google.gson.Gson;
+import com.sun.jdi.InternalException;
 import dataaccess.*;
+import model.BadDataRequest;
 import dataaccess.exceptions.DataAccessException;
 import dataaccess.exceptions.GameSpaceTaken;
 import dataaccess.exceptions.LoginIncorrect;
@@ -38,7 +40,9 @@ public class ChessService {
             AuthData auth = new AuthData(user.username(), UUID.randomUUID().toString());
             authData.addAuth(auth);
             return new Gson().toJson(auth);
-        } catch(RuntimeException ex){
+        } catch(InternalException ex){
+            throw ex;
+        }catch(RuntimeException ex){
             throw new DataAccessException("Error: bad request");
         }
     }
@@ -53,7 +57,9 @@ public class ChessService {
             } else {
                 throw new LoginIncorrect("Error: unauthorized");
             }
-        } catch (RuntimeException ex){
+        } catch(InternalException ex){
+            throw ex;
+        }catch (RuntimeException ex){
             throw new DataAccessException("Error: bad request");
         }
     }
@@ -70,7 +76,9 @@ public class ChessService {
         try {
             var name = new Gson().fromJson(body, Map.class);
             return gameData.createGame(name.get("gameName").toString());
-        } catch (RuntimeException ex){
+        } catch(InternalException ex){
+            throw ex;
+        }catch (RuntimeException ex){
             throw new DataAccessException("Error: bad request");
         }
     }
@@ -101,6 +109,8 @@ public class ChessService {
                     gameData.updateGame(new GameData(game.gameID(), game.whiteUsername(), auth.username(), game.gameName(), game.game()));
                 }
             }
+        }catch(InternalException ex){
+            throw ex;
         }catch (RuntimeException ex){
             throw new DataAccessException("Error: bad request");
         }

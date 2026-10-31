@@ -1,8 +1,8 @@
 package dataaccess;
 
+import com.sun.jdi.InternalException;
 import dataaccess.exceptions.DataAccessException;
 import dataaccess.exceptions.UsernameTakenException;
-import model.AuthData;
 import model.LoginAttempt;
 import model.UserData;
 import org.mindrot.jbcrypt.BCrypt;
@@ -29,7 +29,7 @@ public class DBUserDAO implements UserDAO{
                 preppedState.executeUpdate();
             }
         }catch (SQLException | DataAccessException ex){
-            throw new RuntimeException("Error: cannot clear user data.");
+            throw new InternalException("Error: cannot clear user data.");
         }
     }
     public void createUser(UserData user) throws DataAccessException{
@@ -44,8 +44,10 @@ public class DBUserDAO implements UserDAO{
             }else{
                 throw new UsernameTakenException("Error: This username is taken");
             }
-        }catch (SQLException ex){
-            throw new DataAccessException("Error: user aggregation internal error.");
+        }catch(UsernameTakenException ex){
+            throw ex;
+        } catch (SQLException | DataAccessException ex){
+            throw new InternalException("Error: user aggregation internal error.");
         }
     }
     public boolean userPassCorrect(LoginAttempt login) throws DataAccessException{
@@ -60,8 +62,8 @@ public class DBUserDAO implements UserDAO{
                     }
                 }
             }
-        }catch (SQLException ex){
-            throw new DataAccessException("Error: login check internal error.");
+        }catch (SQLException | DataAccessException ex){
+            throw new InternalException("Error: login check internal error.");
         }
     }
 
@@ -74,8 +76,8 @@ public class DBUserDAO implements UserDAO{
                     return rs.getBoolean(1);
                 }
             }
-        }catch (SQLException ex){
-            throw new DataAccessException("Error: auth validation internal error");
+        }catch (SQLException | DataAccessException ex){
+            throw new InternalException("Error: auth validation internal error");
         }
     }
 
@@ -88,7 +90,7 @@ public class DBUserDAO implements UserDAO{
             }
         }
     }catch (SQLException | DataAccessException ex){
-            throw new RuntimeException("Error: configuration Error");
+            throw new InternalException("Error: configuration Error");
         }
     }
 
