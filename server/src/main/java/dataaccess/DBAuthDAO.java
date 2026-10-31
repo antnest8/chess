@@ -1,6 +1,7 @@
 package dataaccess;
 
 import dataaccess.exceptions.DataAccessException;
+import model.AuthData;
 
 import java.sql.SQLException;
 
@@ -11,7 +12,7 @@ public class DBAuthDAO {
             token NOT NULL CHAR(36),
             username NOT NULL VARCHAR(255),
             PRIMARY KEY (token)
-        )
+        );
 """;
 
     DBAuthDAO() throws DataAccessException{
@@ -20,7 +21,19 @@ public class DBAuthDAO {
 
     public void clear() throws DataAccessException {
         try(var conn = DatabaseManager.getConnection()){
-            try(var preppedState = conn.prepareStatement("TRUNCATE TABLE auth")){
+            try(var preppedState = conn.prepareStatement("TRUNCATE TABLE auth;")){
+                preppedState.executeUpdate();
+            }
+        }catch (SQLException ex){
+            throw new DataAccessException("Error: cannot clear auth data.");
+        }
+    }
+
+    public void addAuth(AuthData auth) throws DataAccessException{
+        try(var conn = DatabaseManager.getConnection()){
+            try(var preppedState = conn.prepareStatement("INSERT INTO auth(token, username) VALUES (?,?);")){
+                preppedState.setString(1, auth.authToken());
+                preppedState.setString(2, auth.username());
                 preppedState.executeUpdate();
             }
         }catch (SQLException ex){
