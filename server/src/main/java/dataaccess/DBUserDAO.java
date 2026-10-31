@@ -1,6 +1,7 @@
 package dataaccess;
 
 import dataaccess.exceptions.DataAccessException;
+import dataaccess.exceptions.UsernameTakenException;
 import model.AuthData;
 import model.LoginAttempt;
 import model.UserData;
@@ -33,11 +34,15 @@ public class DBUserDAO implements UserDAO{
     }
     public void createUser(UserData user) throws DataAccessException{
         try(var conn = DatabaseManager.getConnection()){
-            try(var preppedState = conn.prepareStatement("INSERT INTO user(username, password, email) VALUES (?,?,?);")){
-                preppedState.setString(1, user.username());
-                preppedState.setString(2, BCrypt.hashpw(user.password(), BCrypt.gensalt()));
-                preppedState.setString(3, user.email());
-                preppedState.executeUpdate();
+            if(!userExists(user.username())) {
+                try (var preppedState = conn.prepareStatement("INSERT INTO user(username, password, email) VALUES (?,?,?);")) {
+                    preppedState.setString(1, user.username());
+                    preppedState.setString(2, BCrypt.hashpw(user.password(), BCrypt.gensalt()));
+                    preppedState.setString(3, user.email());
+                    preppedState.executeUpdate();
+                }
+            }else{
+                throw new UsernameTakenException("Error: This username is taken");
             }
         }catch (SQLException ex){
             throw new DataAccessException("Error: user aggregation internal error.");

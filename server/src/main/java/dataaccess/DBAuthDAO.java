@@ -56,20 +56,20 @@ public class DBAuthDAO implements AuthDAO{
         }
     }
 
-    public void deleteAuth(String authToken) throws DataAccessException {
+    public void deleteAuth(String authToken){
         try(var conn = DatabaseManager.getConnection()){
             try(var preppedState = conn.prepareStatement("DELETE FROM auth WHERE token=?;")){
                 preppedState.setString(1, authToken);
                 preppedState.executeUpdate();
             }
-        }catch (SQLException ex){
-            throw new DataAccessException("Error: auth deletion internal error.");
+        }catch (SQLException | DataAccessException ex){
+            throw new RuntimeException("Error: auth deletion internal error.");
         }
     }
 
     //we are going to do this instead of just selecting the row because it doesn't send unnecessary -
     // - user data to the service layer.
-    public boolean authValid(String authToken) throws DataAccessException{
+    public boolean authValid(String authToken){
         try(var conn = DatabaseManager.getConnection()){
             try(var preppedState = conn.prepareStatement("SELECT EXISTS(SELECT 1 FROM auth WHERE token=?);")){
                 preppedState.setString(1, authToken);
@@ -79,7 +79,9 @@ public class DBAuthDAO implements AuthDAO{
                 }
             }
         }catch (SQLException ex){
-            throw new DataAccessException("Error: auth validation internal error");
+            throw new RuntimeException("Error: auth validation internal error");
+        }catch (DataAccessException ex){
+            throw new RuntimeException("Error: internal auth error");
         }
     }
 
