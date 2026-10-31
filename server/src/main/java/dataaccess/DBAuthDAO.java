@@ -3,6 +3,7 @@ package dataaccess;
 import dataaccess.exceptions.DataAccessException;
 import model.AuthData;
 
+import javax.xml.crypto.Data;
 import java.sql.SQLException;
 
 public class DBAuthDAO {
@@ -49,6 +50,17 @@ public class DBAuthDAO {
                     rs.next();
                     return new AuthData(rs.getString("token"), rs.getString("username"));
                 }
+            }
+        }catch (SQLException ex){
+            throw new DataAccessException("Error: cannot clear auth data.");
+        }
+    }
+
+    public void deleteAuth(String authToken) throws DataAccessException {
+        try(var conn = DatabaseManager.getConnection()){
+            try(var preppedState = conn.prepareStatement("DELETE FROM auth WHERE token=?;")){
+                preppedState.setString(1, authToken);
+                preppedState.executeUpdate();
             }
         }catch (SQLException ex){
             throw new DataAccessException("Error: cannot clear auth data.");
