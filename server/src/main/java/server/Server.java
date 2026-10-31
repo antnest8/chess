@@ -1,10 +1,10 @@
 package server;
 
 import com.google.gson.Gson;
-import dataaccess.DataAccessException;
-import dataaccess.GameSpaceTaken;
-import dataaccess.LoginIncorrect;
-import dataaccess.UsernameTakenException;
+import dataaccess.exceptions.DataAccessException;
+import dataaccess.exceptions.GameSpaceTaken;
+import dataaccess.exceptions.LoginIncorrect;
+import dataaccess.exceptions.UsernameTakenException;
 import io.javalin.*;
 import io.javalin.http.Context;
 import service.ChessService;

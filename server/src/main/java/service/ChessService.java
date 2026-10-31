@@ -1,8 +1,10 @@
 package service;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import dataaccess.*;
+import dataaccess.exceptions.DataAccessException;
+import dataaccess.exceptions.GameSpaceTaken;
+import dataaccess.exceptions.LoginIncorrect;
 import model.AuthData;
 import model.GameData;
 import model.LoginAttempt;

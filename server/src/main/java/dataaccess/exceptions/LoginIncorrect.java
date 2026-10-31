@@ -1,4 +1,4 @@
-package dataaccess;
+package dataaccess.exceptions;
 
 public class LoginIncorrect extends DataAccessException {
     public LoginIncorrect(String message) {
