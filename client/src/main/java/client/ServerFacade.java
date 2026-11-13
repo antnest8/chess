@@ -5,10 +5,7 @@ import client.exceptions.ResponseException;
 import client.exceptions.ServerError;
 import client.exceptions.UnauthorizedError;
 import com.google.gson.Gson;
-import model.AuthData;
-import model.GameData;
-import model.LoginAttempt;
-import model.UserData;
+import model.*;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -26,23 +23,27 @@ public class ServerFacade {
     }
 
     public void clear() throws ResponseException {
-        handleResponse(sendRequest(buildRequest("DELETE", "/db", null)), null);
+        handleResponse(sendRequest(buildRequest("DELETE", "/db", null, null)), null);
     }
 
     public AuthData register(UserData user) throws ResponseException{
-        return null;
+        return handleResponse(sendRequest(
+                buildRequest("POST", "/user", user, null)), AuthData.class);
     }
 
     public AuthData login(LoginAttempt login) throws ResponseException{
-        return null;
+        return handleResponse(sendRequest(
+                buildRequest("POST", "/session", login, null)), AuthData.class);
     }
 
     public void logout(AuthData auth) throws ResponseException{
+        handleResponse(sendRequest(buildRequest("DELETE", "/session", null, auth.authToken())), null);
 
     }
 
-    public Collection<GameData> listGames(AuthData auth) throws ResponseException{
-        return null;
+    public GameList listGames(AuthData auth) throws ResponseException{
+        return handleResponse(sendRequest(buildRequest("GET", "/game", null, auth.authToken())), GameList.class);
+
     }
 
     public void createGame(AuthData auth, String gameName) throws ResponseException{
@@ -53,12 +54,14 @@ public class ServerFacade {
 
     }
 
-    private HttpRequest buildRequest(String method, String path, Object body){
+    private HttpRequest buildRequest(String method, String path, Object body, String authToken){
         var request = HttpRequest.newBuilder()
                 .uri(URI.create(serverUrl + path))
                 .method(method, makeRequestBody(body));
         if(body != null){
             request.setHeader("Content-Type", "application/json");
+        }if(authToken != null){
+            request.setHeader("Authorization", authToken);
         }
         return request.build();
     }

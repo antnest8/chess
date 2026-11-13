@@ -2,12 +2,9 @@ package client;
 
 import chess.ChessGame;
 import client.exceptions.ResponseException;
-import model.AuthData;
-import model.GameData;
-import model.LoginAttempt;
+import model.*;
 import org.junit.jupiter.api.*;
 import server.Server;
-import model.UserData;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -60,7 +57,7 @@ public class ServerFacadeTests {
             Assertions.assertThrows(ResponseException.class,
                     () -> facade.login(new LoginAttempt("newUser", "myPassword")));
         } catch(Exception e){
-            Assertions.fail("Unexpected Exception: Failed");
+            Assertions.fail("Unexpected Exception: " + e.getMessage());
         }
     }
 
@@ -71,7 +68,7 @@ public class ServerFacadeTests {
         try {
             Assertions.assertInstanceOf(AuthData.class, facade.register(normUser));
         } catch(Exception e){
-            Assertions.fail("Unexpected Exception: Failed");
+            Assertions.fail("Unexpected Exception: " + e.getMessage());
         }
     }
 
@@ -83,7 +80,7 @@ public class ServerFacadeTests {
             facade.register(normUser);
             Assertions.assertThrows(ResponseException.class, ()->facade.register(normUser));
         } catch(Exception e){
-            Assertions.fail("Unexpected Exception: Failed");
+            Assertions.fail("Unexpected Exception: " + e.getMessage());
         }
     }
 
@@ -95,7 +92,7 @@ public class ServerFacadeTests {
             Assertions.assertThrows(ResponseException.class,
                     ()->facade.login(new LoginAttempt("notUser", "noPassword")));
         } catch(Exception e){
-            Assertions.fail("Unexpected Exception: Failed");
+            Assertions.fail("Unexpected Exception: " + e.getMessage());
         }
     }
 
@@ -108,7 +105,7 @@ public class ServerFacadeTests {
             Assertions.assertInstanceOf(AuthData.class,
                     facade.login(new LoginAttempt("newUser", "myPassword")));
         } catch(Exception e){
-            Assertions.fail("Unexpected Exception: Failed");
+            Assertions.fail("Unexpected Exception: " + e.getMessage());
         }
     }
 
@@ -122,7 +119,7 @@ public class ServerFacadeTests {
             Assertions.assertThrows(ResponseException.class,
                     ()->facade.listGames(auth));
         } catch(Exception e){
-            Assertions.fail("Unexpected Exception: Failed");
+            Assertions.fail("Unexpected Exception: " + e.getMessage());
         }
     }
 
@@ -136,7 +133,7 @@ public class ServerFacadeTests {
             Assertions.assertThrows(ResponseException.class,
                     ()->facade.logout(auth));
         } catch(Exception e){
-            Assertions.fail("Unexpected Exception: Failed");
+            Assertions.fail("Unexpected Exception: " + e.getMessage());
         }
     }
 
@@ -147,9 +144,9 @@ public class ServerFacadeTests {
         try {
             AuthData auth = facade.register(normUser);
             facade.createGame(auth, "myGame");
-            Assertions.assertTrue(facade.listGames(auth).size() == 1);
+            Assertions.assertTrue(facade.listGames(auth).games().size() == 1);
         } catch(Exception e){
-            Assertions.fail("Unexpected Exception: Failed");
+            Assertions.fail("Unexpected Exception: " + e.getMessage());
         }
     }
 
@@ -162,7 +159,7 @@ public class ServerFacadeTests {
             facade.createGame(auth, "myGame");
             Assertions.assertThrows(ResponseException.class, ()->facade.createGame(auth, "myGame"));
         } catch(Exception e){
-            Assertions.fail("Unexpected Exception: Failed");
+            Assertions.fail("Unexpected Exception: " + e.getMessage());
         }
     }
 
@@ -174,7 +171,7 @@ public class ServerFacadeTests {
             AuthData auth = new AuthData("newUser", "100sad");
             Assertions.assertThrows(ResponseException.class, ()->facade.createGame(auth, "myGame"));
         } catch(Exception e){
-            Assertions.fail("Unexpected Exception: Failed");
+            Assertions.fail("Unexpected Exception: " + e.getMessage());
         }
     }
 
@@ -186,7 +183,7 @@ public class ServerFacadeTests {
             AuthData auth = new AuthData("newUser", "100sad");
             Assertions.assertThrows(ResponseException.class, ()->facade.listGames(auth));
         } catch(Exception e){
-            Assertions.fail("Unexpected Exception: Failed");
+            Assertions.fail("Unexpected Exception: " + e.getMessage());
         }
     }
 
@@ -196,11 +193,11 @@ public class ServerFacadeTests {
     public void listGamesSuccessTest(){
         try {
             AuthData auth = facade.register(normUser);
-            Assertions.assertTrue(facade.listGames(auth).size() == 0);
+            Assertions.assertTrue(facade.listGames(auth).games().size() == 0);
             facade.createGame(auth, "myGame");
-            Assertions.assertTrue(facade.listGames(auth).size() == 1);
+            Assertions.assertTrue(facade.listGames(auth).games().size() == 1);
         } catch(Exception e){
-            Assertions.fail("Unexpected Exception: Failed");
+            Assertions.fail("Unexpected Exception: " + e.getMessage());
         }
     }
 
@@ -211,12 +208,12 @@ public class ServerFacadeTests {
         try {
             AuthData auth = facade.register(normUser);
             facade.createGame(auth, "myGame");
-            Collection<GameData> games = facade.listGames(auth);
-            facade.joinGame(auth, new ArrayList<GameData>(games).get(0).gameID(), "WHITE");
-            Assertions.assertTrue(facade.listGames(auth).contains(
-                    new GameData(new ArrayList<GameData>(games).get(0).gameID(), "newUser", null, "myGame", new ChessGame())));
+            GameList games = facade.listGames(auth);
+            facade.joinGame(auth, games.games().get(0).gameID(), "WHITE");
+            Assertions.assertTrue(facade.listGames(auth).games().contains(
+                    new GameData(games.games().get(0).gameID(), "newUser", null, "myGame", new ChessGame())));
         } catch(Exception e){
-            Assertions.fail("Unexpected Exception: Failed");
+            Assertions.fail("Unexpected Exception: " + e.getMessage());
         }
     }
 
@@ -227,11 +224,11 @@ public class ServerFacadeTests {
         try {
             AuthData auth = facade.register(normUser);
             facade.createGame(auth, "myGame");
-            Collection<GameData> games = facade.listGames(auth);
-            facade.joinGame(auth, new ArrayList<GameData>(games).get(0).gameID(), "WHITE");
-            Assertions.assertThrows(ResponseException.class, ()->facade.joinGame(auth, new ArrayList<GameData>(games).get(0).gameID(), "WHITE"));
+            GameList games = facade.listGames(auth);
+            facade.joinGame(auth, games.games().get(0).gameID(), "WHITE");
+            Assertions.assertThrows(ResponseException.class, ()->facade.joinGame(auth, games.games().get(0).gameID(), "WHITE"));
         } catch(Exception e){
-            Assertions.fail("Unexpected Exception: Failed");
+            Assertions.fail("Unexpected Exception: " + e.getMessage());
         }
     }
 
@@ -244,7 +241,7 @@ public class ServerFacadeTests {
             facade.createGame(auth, "myGame");
             Assertions.assertThrows(ResponseException.class, ()->facade.joinGame(auth, 3, "WHITE"));
         } catch(Exception e){
-            Assertions.fail("Unexpected Exception: Failed");
+            Assertions.fail("Unexpected Exception: " + e.getMessage());
         }
     }
 
@@ -258,7 +255,7 @@ public class ServerFacadeTests {
             facade.logout(auth);
             Assertions.assertThrows(ResponseException.class, ()->facade.joinGame(auth, 1, "WHITE"));
         } catch(Exception e){
-            Assertions.fail("Unexpected Exception: Failed");
+            Assertions.fail("Unexpected Exception: " + e.getMessage());
         }
     }
 
