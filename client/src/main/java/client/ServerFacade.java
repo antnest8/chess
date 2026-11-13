@@ -8,7 +8,10 @@ import java.util.Map;
 
 public class ServerFacade {
 
-    public void clear(){
+    /*
+    Should delete all pets and not return anything. Just avoid exceptions
+     */
+    public void clear() throws ResponseException{
 
     }
 
