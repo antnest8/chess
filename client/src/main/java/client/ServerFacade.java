@@ -1,9 +1,14 @@
 package client;
 
 import com.google.gson.Gson;
+import model.AuthData;
+import model.GameData;
+import model.LoginAttempt;
+import model.UserData;
 
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Collection;
 import java.util.Map;
 
 public class ServerFacade {
@@ -15,27 +20,27 @@ public class ServerFacade {
 
     }
 
-    public void register(){
+    public AuthData register(UserData user) throws ResponseException{
 
     }
 
-    public void login(){
+    public AuthData login(LoginAttempt login) throws ResponseException{
 
     }
 
-    public void logout(){
+    public void logout(AuthData auth) throws ResponseException{
 
     }
 
-    public void listGames(){
+    public Collection<GameData> listGames(AuthData auth) throws ResponseException{
 
     }
 
-    public void createGame(){
+    public void createGame(AuthData auth, String gameName) throws ResponseException{
 
     }
 
-    public void joinGame(){
+    public void joinGame(AuthData auth, int gameID, String color) throws ResponseException{
 
     }
 
