@@ -30,11 +30,11 @@ public class ServerFacade {
     }
 
     public AuthData register(UserData user) throws ResponseException{
-
+        return null;
     }
 
     public AuthData login(LoginAttempt login) throws ResponseException{
-
+        return null;
     }
 
     public void logout(AuthData auth) throws ResponseException{
@@ -42,7 +42,7 @@ public class ServerFacade {
     }
 
     public Collection<GameData> listGames(AuthData auth) throws ResponseException{
-
+        return null;
     }
 
     public void createGame(AuthData auth, String gameName) throws ResponseException{

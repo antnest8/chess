@@ -24,7 +24,7 @@ public class ServerFacadeTests {
         server = new Server();
         var port = server.run(0);
         System.out.println("Started test HTTP server on " + port);
-        facade = new ServerFacade("localhost:" + port);
+        facade = new ServerFacade("http://localhost:" + port);
         normUser = new UserData("newUser", "myPassword", "user@email.com");
     }
 
@@ -34,7 +34,7 @@ public class ServerFacadeTests {
     }
 
     @BeforeEach
-    static void testSetup(){
+    void testSetup(){
         try {
             facade.clear();
         } catch (ResponseException e){
