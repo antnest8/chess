@@ -218,4 +218,48 @@ public class ServerFacadeTests {
             Assertions.fail("Unexpected Exception: Failed");
         }
     }
+
+    @Test
+    @Order(15)
+    @DisplayName("joinGame test fail: double use")
+    public void joinGameTwiceFail(){
+        try {
+            AuthData auth = facade.register(normUser);
+            facade.createGame(auth, "myGame");
+            List<GameData> games = facade.listGames(auth);
+            facade.joinGame(auth, games.get(0).gameID(), "WHITE");
+            Assertions.assertThrows(ResponseException.class, ()->facade.joinGame(auth, games.get(0).gameID(), "WHITE"));
+        } catch(Exception e){
+            Assertions.fail("Unexpected Exception: Failed");
+        }
+    }
+
+    @Test
+    @Order(15)
+    @DisplayName("joinGame test fail: no game")
+    public void joinGameTwiceFail(){
+        try {
+            AuthData auth = facade.register(normUser);
+            facade.createGame(auth, "myGame");
+            Assertions.assertThrows(ResponseException.class, ()->facade.joinGame(auth, 3, "WHITE"));
+        } catch(Exception e){
+            Assertions.fail("Unexpected Exception: Failed");
+        }
+    }
+
+    @Test
+    @Order(16)
+    @DisplayName("joinGame test fail: unauth")
+    public void joinGameUnauthFail(){
+        try {
+            AuthData auth = facade.register(normUser);
+            facade.createGame(auth, "myGame");
+            facade.logout(auth);
+            Assertions.assertThrows(ResponseException.class, ()->facade.joinGame(auth, 1, "WHITE"));
+        } catch(Exception e){
+            Assertions.fail("Unexpected Exception: Failed");
+        }
+    }
+
+
 }
