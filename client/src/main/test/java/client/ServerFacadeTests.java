@@ -1,10 +1,15 @@
 package client;
 
+import chess.ChessGame;
 import model.AuthData;
+import model.GameData;
 import model.LoginAttempt;
 import org.junit.jupiter.api.*;
 import server.Server;
 import model.UserData;
+
+import java.util.Collection;
+import java.util.List;
 
 
 public class ServerFacadeTests {
@@ -193,6 +198,22 @@ public class ServerFacadeTests {
             Assertions.assertTrue(facade.listGames(auth).size() == 0);
             facade.createGame(auth, "myGame");
             Assertions.assertTrue(facade.listGames(auth).size() == 1);
+        } catch(Exception e){
+            Assertions.fail("Unexpected Exception: Failed");
+        }
+    }
+
+    @Test
+    @Order(14)
+    @DisplayName("joinGame test: success")
+    public void joinGameTest(){
+        try {
+            AuthData auth = facade.register(normUser);
+            facade.createGame(auth, "myGame");
+            List<GameData> games = facade.listGames(auth);
+            facade.joinGame(auth, games.get(0).gameID(), "WHITE");
+            Assertions.assertTrue(facade.listGames().list().contains(
+                    new GameData(games.get(0).gameID(), "newUser", null, "myGame", new ChessGame())));
         } catch(Exception e){
             Assertions.fail("Unexpected Exception: Failed");
         }
