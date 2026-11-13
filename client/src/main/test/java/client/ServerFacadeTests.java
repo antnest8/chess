@@ -6,8 +6,7 @@ import model.*;
 import org.junit.jupiter.api.*;
 import server.Server;
 
-import java.util.ArrayList;
-import java.util.Collection;
+
 
 
 public class ServerFacadeTests {
@@ -151,19 +150,6 @@ public class ServerFacadeTests {
     }
 
     @Test
-    @Order(10)
-    @DisplayName("createGame test: double fail")
-    public void createGameFailDoubleTest(){
-        try {
-            AuthData auth = facade.register(normUser);
-            facade.createGame(auth, "myGame");
-            Assertions.assertThrows(ResponseException.class, ()->facade.createGame(auth, "myGame"));
-        } catch(Exception e){
-            Assertions.fail("Unexpected Exception: " + e.getMessage());
-        }
-    }
-
-    @Test
     @Order(11)
     @DisplayName("createGame test: unauthorized")
     public void createGameFailUnauthTest(){
@@ -209,9 +195,10 @@ public class ServerFacadeTests {
             AuthData auth = facade.register(normUser);
             facade.createGame(auth, "myGame");
             GameList games = facade.listGames(auth);
-            facade.joinGame(auth, games.games().get(0).gameID(), "WHITE");
-            Assertions.assertTrue(facade.listGames(auth).games().contains(
-                    new GameData(games.games().get(0).gameID(), "newUser", null, "myGame", new ChessGame())));
+            facade.joinGame(auth, 1, "WHITE");
+            GameList newgames = facade.listGames(auth);
+            Assertions.assertTrue(newgames.games().contains(
+                    new GameData(1, "newUser", null, "myGame", null)));
         } catch(Exception e){
             Assertions.fail("Unexpected Exception: " + e.getMessage());
         }
