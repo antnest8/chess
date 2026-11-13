@@ -1,6 +1,5 @@
 package client;
 
-import chess.ChessGame;
 import client.exceptions.ResponseException;
 import model.*;
 import org.junit.jupiter.api.*;
