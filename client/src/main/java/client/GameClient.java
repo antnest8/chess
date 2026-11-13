@@ -10,11 +10,15 @@ import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 public class GameClient {
+    //state
     private boolean authorized = false;
     private boolean running = true;
+    private AuthData auth = null;
+
+    //attributes
     private ServerFacade facade;
     private Server server;
-    private AuthData auth = null;
+
 
     public GameClient(){
         server = new Server();
@@ -93,6 +97,25 @@ public class GameClient {
 
     private void forceExit(){
         authorized = false;
+    }
+
+    private String unauthOptions(){
+        return "ChessClient Options - currently not logged in.\n"
+                + "exit: exits the program\n"
+                + "register <username> <password> <email>: registers a new user\n"
+                + "login <username> <password>: logs into a previously registered account\n"
+                + "help: displays this text";
+    }
+
+    private String authedOptions(){
+        return "ChessClient Options - logged in.\n"
+                + "exit: exits the program\n"
+                + "logout: log out\n"
+                + "create <game_name>: create a game\n"
+                + "list : list all the games\n"
+                + "play <game_id> <WHITE/BLACK>: join a game to play\n"
+                + "observe <game_id>: displays board of a game\n"
+                + "help: displays this text";
     }
 
 
