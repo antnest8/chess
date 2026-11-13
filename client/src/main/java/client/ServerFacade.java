@@ -52,4 +52,9 @@ public class ServerFacade {
 
     }
 
+    private boolean isSuccesful(){
+
+    }
+
+
 }
