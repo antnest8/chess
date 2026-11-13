@@ -12,6 +12,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Collection;
+import java.util.Map;
 
 public class ServerFacade {
 
@@ -47,10 +48,14 @@ public class ServerFacade {
     }
 
     public void createGame(AuthData auth, String gameName) throws ResponseException{
+        handleResponse(sendRequest(buildRequest("POST", "/game", Map.of("gameName", gameName), auth.authToken())), null);
 
     }
 
     public void joinGame(AuthData auth, int gameID, String color) throws ResponseException{
+        handleResponse(sendRequest(
+                buildRequest("PUT", "/game", Map.of("playerColor", color, "gameID", gameID), auth.authToken()))
+                , null);
 
     }
 
