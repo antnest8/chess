@@ -9,7 +9,8 @@ import org.junit.jupiter.api.*;
 import server.Server;
 import model.UserData;
 
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Collection;
 
 
 public class ServerFacadeTests {
@@ -23,7 +24,7 @@ public class ServerFacadeTests {
         server = new Server();
         var port = server.run(0);
         System.out.println("Started test HTTP server on " + port);
-        facade = new ServerFacade();
+        facade = new ServerFacade("localhost:" + port);
         normUser = new UserData("newUser", "myPassword", "user@email.com");
     }
 
@@ -105,7 +106,7 @@ public class ServerFacadeTests {
         try {
             facade.register(normUser);
             Assertions.assertInstanceOf(AuthData.class,
-                    ()->facade.login(new LoginAttempt("newUser", "myPassword")));
+                    facade.login(new LoginAttempt("newUser", "myPassword")));
         } catch(Exception e){
             Assertions.fail("Unexpected Exception: Failed");
         }
@@ -119,7 +120,7 @@ public class ServerFacadeTests {
             AuthData auth = facade.register(normUser);
             facade.logout(auth);
             Assertions.assertThrows(ResponseException.class,
-                    ()->facade.listGames());
+                    ()->facade.listGames(auth));
         } catch(Exception e){
             Assertions.fail("Unexpected Exception: Failed");
         }
@@ -210,10 +211,10 @@ public class ServerFacadeTests {
         try {
             AuthData auth = facade.register(normUser);
             facade.createGame(auth, "myGame");
-            List<GameData> games = facade.listGames(auth);
-            facade.joinGame(auth, games.get(0).gameID(), "WHITE");
-            Assertions.assertTrue(facade.listGames().list().contains(
-                    new GameData(games.get(0).gameID(), "newUser", null, "myGame", new ChessGame())));
+            Collection<GameData> games = facade.listGames(auth);
+            facade.joinGame(auth, new ArrayList<GameData>(games).get(0).gameID(), "WHITE");
+            Assertions.assertTrue(facade.listGames(auth).contains(
+                    new GameData(new ArrayList<GameData>(games).get(0).gameID(), "newUser", null, "myGame", new ChessGame())));
         } catch(Exception e){
             Assertions.fail("Unexpected Exception: Failed");
         }
@@ -226,9 +227,9 @@ public class ServerFacadeTests {
         try {
             AuthData auth = facade.register(normUser);
             facade.createGame(auth, "myGame");
-            List<GameData> games = facade.listGames(auth);
-            facade.joinGame(auth, games.get(0).gameID(), "WHITE");
-            Assertions.assertThrows(ResponseException.class, ()->facade.joinGame(auth, games.get(0).gameID(), "WHITE"));
+            Collection<GameData> games = facade.listGames(auth);
+            facade.joinGame(auth, new ArrayList<GameData>(games).get(0).gameID(), "WHITE");
+            Assertions.assertThrows(ResponseException.class, ()->facade.joinGame(auth, new ArrayList<GameData>(games).get(0).gameID(), "WHITE"));
         } catch(Exception e){
             Assertions.fail("Unexpected Exception: Failed");
         }
@@ -237,7 +238,7 @@ public class ServerFacadeTests {
     @Test
     @Order(15)
     @DisplayName("joinGame test fail: no game")
-    public void joinGameTwiceFail(){
+    public void joinGameNoGameFail(){
         try {
             AuthData auth = facade.register(normUser);
             facade.createGame(auth, "myGame");

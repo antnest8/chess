@@ -25,11 +25,8 @@ public class ServerFacade {
         this.serverUrl = serverUrl;
     }
 
-    /*
-    Should delete all pets and not return anything. Just avoid exceptions
-     */
     public void clear() throws ResponseException {
-
+        handleResponse(sendRequest(buildRequest("DELETE", "/db", null)), null);
     }
 
     public AuthData register(UserData user) throws ResponseException{
