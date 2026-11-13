@@ -1,6 +1,7 @@
 package client;
 
 import chess.ChessGame;
+import client.exceptions.ResponseException;
 import model.AuthData;
 import model.GameData;
 import model.LoginAttempt;
@@ -8,7 +9,6 @@ import org.junit.jupiter.api.*;
 import server.Server;
 import model.UserData;
 
-import java.util.Collection;
 import java.util.List;
 
 

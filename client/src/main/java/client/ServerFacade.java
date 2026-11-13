@@ -1,5 +1,6 @@
 package client;
 
+import client.exceptions.ResponseException;
 import com.google.gson.Gson;
 import model.AuthData;
 import model.GameData;
@@ -11,7 +12,6 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Collection;
-import java.util.Map;
 
 public class ServerFacade {
 
@@ -25,7 +25,7 @@ public class ServerFacade {
     /*
     Should delete all pets and not return anything. Just avoid exceptions
      */
-    public void clear() throws ResponseException{
+    public void clear() throws ResponseException {
 
     }
 
@@ -76,7 +76,7 @@ public class ServerFacade {
     }
 
     private <T> T handleResponse(){
-        
+
     }
 
     private boolean isSuccesful(){
