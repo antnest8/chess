@@ -1,6 +1,9 @@
 package client;
 
+import client.exceptions.NameTakenError;
 import client.exceptions.ResponseException;
+import client.exceptions.ServerError;
+import client.exceptions.UnauthorizedError;
 import com.google.gson.Gson;
 import model.AuthData;
 import model.GameData;
@@ -71,16 +74,37 @@ public class ServerFacade {
         }
     }
 
-    private HttpResponse<String> sendRequest(){
-
+    private HttpResponse<String> sendRequest(HttpRequest request) throws ServerError {
+        try{
+            return client.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch(Exception e){
+            throw new ServerError("Unknown Server Error");
+        }
     }
 
-    private <T> T handleResponse(){
+    private <T> T handleResponse(HttpResponse<String> response, Class<T> responseClass) throws ResponseException{
+        var status = response.statusCode();
+        if(!isSuccesful(status)){
+            if(status == 500){
+                throw new ServerError("Unknown Server Error");
+            } else if(status == 401){
+                throw new UnauthorizedError("Unauthorized");
+            } else if (status == 403) {
+                throw new NameTakenError("Name already taken");
+            } else {
+                throw new ResponseException("Unknown Client Error");
+            }
+        }
 
+        if(responseClass != null){
+            return new Gson().fromJson(response.body(), responseClass);
+        }
+
+        return null;
     }
 
-    private boolean isSuccesful(){
-
+    private boolean isSuccesful(int statusCode){
+        return statusCode / 100 == 2;
     }
 
 
