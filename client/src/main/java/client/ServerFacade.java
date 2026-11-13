@@ -2,6 +2,8 @@ package client;
 
 import com.google.gson.Gson;
 
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.Map;
 
 public class ServerFacade {
@@ -33,4 +35,21 @@ public class ServerFacade {
     public void joinGame(){
 
     }
+
+    private HttpRequest buildRequest(){
+
+    }
+
+    private HttpRequest.BodyPublisher makeRequestBody(){
+
+    }
+
+    private HttpResponse<String> sendRequest(){
+
+    }
+
+    private <T> T handleResponse(){
+
+    }
+
 }
