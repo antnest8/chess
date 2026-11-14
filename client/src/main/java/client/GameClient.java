@@ -1,8 +1,8 @@
 package client;
 
-import client.exceptions.ResponseException;
-import client.exceptions.ServerError;
-import model.AuthData;
+import client.exceptions.*;
+import dataaccess.exceptions.UsernameTakenException;
+import model.*;
 import server.Server;
 import ui.EscapeSequences;
 
@@ -118,8 +118,95 @@ public class GameClient {
                 + "help: displays this text";
     }
 
+    private String handleRegister(String[] lineOps){
+        try{
+            auth = facade.register(new UserData(lineOps[1], lineOps[2], lineOps[3]));
+            authorized = true;
+            return "Succesfully logged in. Try 'help' for new options.";
+        } catch(NameTakenError e){
+            return "Username already taken. Try again";
+        } catch(ServerError e){
+            return "Unknown Server Error: Try again or check connection";
+        } catch(ResponseException e){
+            forceExit();
+            return "Fatal Client Error: exiting...";
+        }
+    }
 
+    private String handleLogin(String[] lineOps){
+        try{
+            auth = facade.login(new LoginAttempt(lineOps[1], lineOps[2]));
+            authorized = true;
+            return "Succesfully logged in. Try 'help' for new options.";
+        } catch(UnauthorizedError e){
+            return "Login information incorrect. Try again";
+        } catch(ServerError e){
+            return "Unknown Server Error: Try again or check connection";
+        } catch(ResponseException e){
+            forceExit();
+            return "Fatal Client Error: exiting...";
+        }
+    }
 
+    private String handleCreateGame(String gameName){
+        try{
+            facade.createGame(auth, gameName);
+            return "Game created! Use 'list' to see open games";
+        } catch(UnauthorizedError e){
+            authorized = false;
+            auth = null;
+            return "Unauthorized! Re-login please";
+        } catch(ServerError e){
+            return "Unknown Server Error: Try again or check connection";
+        } catch(ResponseException e){
+            forceExit();
+            return "Fatal Client Error: exiting...";
+        }
+    }
+
+    private String handleListGame(){
+        try{
+            StringBuilder result = new StringBuilder();
+            GameList list = facade.listGames(auth);
+            for(GameData game : list.games()){
+                result.append(game.gameID()).append(". ");
+                result.append("Name: ").append(game.gameName());
+                result.append("White: ").append(game.whiteUsername()).append(" Black: ").append(game.blackUsername());
+                result.append("\n");
+            }
+            return "Games:\n" + result.toString();
+        } catch(UnauthorizedError e){
+            authorized = false;
+            auth = null;
+            return "Unauthorized! Re-login please";
+        } catch(ServerError e){
+            return "Unknown Server Error: Try again or check connection";
+        } catch(ResponseException e){
+            forceExit();
+            return "Fatal Client Error: exiting...";
+        }
+    }
+
+    private String handleJoinGame(String[] lineOps){
+        try{
+            if(!lineOps[2].equalsIgnoreCase("white") || !lineOps[2].equalsIgnoreCase("black")){
+                return "Unable to parse " + lineOps[2] + " as WHITE or BLACK. Please try again.";
+            }
+            facade.joinGame(auth, Integer.parseInt(lineOps[1]), lineOps[2].toLowerCase());
+            return "Game joined! (note: use 'observe' to see board for now)";
+        } catch(UnauthorizedError e){
+            authorized = false;
+            auth = null;
+            return "Unauthorized! Re-login please";
+        } catch(GameNotFoundError e){
+            return "Game not found! Please use the correct ID (i.e 'list')";
+        }catch(ServerError e){
+            return "Unknown Server Error: Try again or check connection";
+        } catch(ResponseException e){
+            forceExit();
+            return "Fatal Client Error: exiting...";
+        }
+    }
 
 
 }
