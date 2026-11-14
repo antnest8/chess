@@ -117,7 +117,9 @@ public class GameClient {
 
     private String handleRegister(String[] lineOps){
         try{
-            if(lineOps.length < 4) return "Malformed request: Use 'register <username> <password> <email>'";
+            if(lineOps.length < 4) {
+                return "Malformed request: Use 'register <username> <password> <email>'";
+            }
 
             auth = facade.register(new UserData(lineOps[1], lineOps[2], lineOps[3]));
             authorized = true;
@@ -134,7 +136,9 @@ public class GameClient {
 
     private String handleLogin(String[] lineOps){
         try{
-            if(lineOps.length < 3) return "Malformed request: Use 'login <username> <password>'";
+            if(lineOps.length < 3) {
+                return "Malformed request: Use 'login <username> <password>'";
+            }
 
             auth = facade.login(new LoginAttempt(lineOps[1], lineOps[2]));
             authorized = true;
@@ -151,7 +155,9 @@ public class GameClient {
 
     private String handleCreateGame(String[] lineOps){
         try{
-            if(lineOps.length < 2) return "Malformed request: Use 'create <game_name>'";
+            if(lineOps.length < 2) {
+                return "Malformed request: Use 'create <game_name>'";
+            }
             facade.createGame(auth, lineOps[1]);
             return "Game created! Use 'list' to see open games";
         } catch(UnauthorizedError e){
@@ -191,7 +197,9 @@ public class GameClient {
 
     private String handleJoinGame(String[] lineOps){
         try{
-            if(lineOps.length < 3) return "Malformed request: Use 'play <game_id> <WHITE/BLACK>'";
+            if(lineOps.length < 3) {
+                return "Malformed request: Use 'play <game_id> <WHITE/BLACK>'";
+            }
 
             if(!"WHITE".equalsIgnoreCase(lineOps[2]) && !"BLACK".equalsIgnoreCase(lineOps[2])){
                 return "Unable to parse " + lineOps[2] + " as WHITE or BLACK. Please try again.";
@@ -214,7 +222,9 @@ public class GameClient {
 
     private String handleObserveGame(String[] lineOps){
         try{
-            if(lineOps.length < 2) return "Malformed request: Use 'play <game_id>'";
+            if(lineOps.length < 2) {
+                return "Malformed request: Use 'play <game_id>'";
+            }
 
             GameList list = facade.listGames(auth);
             GameData game = null;
@@ -223,7 +233,9 @@ public class GameClient {
                     game = g;
                 }
             }
-            if(game == null) return "Game not found! Try again (i.e 'list')";
+            if(game == null) {
+                return "Game not found! Try again (i.e 'list')";
+            }
 
 
 

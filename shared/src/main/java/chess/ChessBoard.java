@@ -34,7 +34,7 @@ public class ChessBoard {
         Matcher match = pat.matcher(boardStr);
         int count = 0;
         while(match.find()){
-            if(count > 63) break; //just making sure to avoid out of bounds errors (who knows)
+            if(count > 63) {break;} //just making sure to avoid out of bounds errors (who knows)
             switch(match.group(1)){
                 case "p" -> addPiece(new ChessPosition((count/8)+1, (count%8)+1),
                       new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN));

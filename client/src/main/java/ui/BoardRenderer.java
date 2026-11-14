@@ -21,7 +21,9 @@ public class BoardRenderer {
         StringBuilder boardStr = new StringBuilder();
         boolean isWhite = !username.equals(gameInfo.blackUsername());
 
-        String[][] board = {{EscapeSequences.RESET_BG_COLOR + EscapeSequences.SET_BG_COLOR_DARK_GREY + EscapeSequences.EMPTY, " a ", " b ", " c ", " d ", " e ", " f ", " g ", " h ", EscapeSequences.EMPTY + EscapeSequences.SET_BG_COLOR_DARK_GREY  + EscapeSequences.RESET_BG_COLOR},
+        String[][] board = {{EscapeSequences.RESET_BG_COLOR + EscapeSequences.SET_BG_COLOR_DARK_GREY + EscapeSequences.EMPTY,
+                " a ", " b ", " c ", " d ", " e ", " f ", " g ", " h ",
+                EscapeSequences.EMPTY + EscapeSequences.SET_BG_COLOR_DARK_GREY  + EscapeSequences.RESET_BG_COLOR},
                 {EscapeSequences.RESET_BG_COLOR + numb(8), null, null, null, null, null, null, null, null, numb(8) + EscapeSequences.RESET_BG_COLOR},
                 {EscapeSequences.RESET_BG_COLOR + numb(7), null, null, null, null, null, null, null, null, numb(7) + EscapeSequences.RESET_BG_COLOR},
                 {EscapeSequences.RESET_BG_COLOR + numb(6), null, null, null, null, null, null, null, null, numb(6) + EscapeSequences.RESET_BG_COLOR},
@@ -30,7 +32,9 @@ public class BoardRenderer {
                 {EscapeSequences.RESET_BG_COLOR + numb(3), null, null, null, null, null, null, null, null, numb(3) + EscapeSequences.RESET_BG_COLOR},
                 {EscapeSequences.RESET_BG_COLOR + numb(2), null, null, null, null, null, null, null, null, numb(2) + EscapeSequences.RESET_BG_COLOR},
                 {EscapeSequences.RESET_BG_COLOR + numb(1), null, null, null, null, null, null, null, null, numb(1) + EscapeSequences.RESET_BG_COLOR},
-                {EscapeSequences.RESET_BG_COLOR + EscapeSequences.SET_BG_COLOR_DARK_GREY + EscapeSequences.EMPTY, " a ", " b ", " c ", " d ", " e ", " f ", " g ", " h ", EscapeSequences.EMPTY + EscapeSequences.SET_BG_COLOR_DARK_GREY  + EscapeSequences.RESET_BG_COLOR}};
+                {EscapeSequences.RESET_BG_COLOR + EscapeSequences.SET_BG_COLOR_DARK_GREY + EscapeSequences.EMPTY,
+                        " a ", " b ", " c ", " d ", " e ", " f ", " g ", " h ",
+                        EscapeSequences.EMPTY + EscapeSequences.SET_BG_COLOR_DARK_GREY  + EscapeSequences.RESET_BG_COLOR}};
 
         for(int j = 1; j < 9; j++){
             for(int i = 1; i < 9; i++){
