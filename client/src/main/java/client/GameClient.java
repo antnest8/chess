@@ -1,9 +1,7 @@
 package client;
 
 import client.exceptions.*;
-import dataaccess.exceptions.UsernameTakenException;
 import model.*;
-import server.Server;
 import ui.BoardRenderer;
 import ui.EscapeSequences;
 
@@ -18,13 +16,10 @@ public class GameClient {
 
     //attributes
     private ServerFacade facade;
-    private Server server;
 
 
     public GameClient(){
-        server = new Server();
-        var port = server.run(0);
-        facade = new ServerFacade("http://localhost:" + port);
+        facade = new ServerFacade("http://localhost:" + 8080);
         startRepl();
     }
 
