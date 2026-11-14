@@ -1,5 +1,6 @@
 package ui;
 
+import chess.ChessBoard;
 import chess.ChessGame;
 import chess.ChessPiece;
 import chess.ChessPosition;
@@ -33,17 +34,17 @@ public class BoardRenderer {
 
         for(int j = 1; j < 9; j++){
             for(int i = 1; i < 9; i++){
-                String background = "";
-                String foreground = "";
-                String icon = "";
+                String background;
+                String foreground;
+                String icon;
 
                 if((j + i) % 2 == 0){
                     background = EscapeSequences.SET_BG_COLOR_WHITE;
                 } else{
                     background = EscapeSequences.SET_BG_COLOR_BLACK;
                 }
-
-                ChessPiece piece = gameInfo.game().getBoard().getPiece(new ChessPosition(j, i));
+                ChessBoard boardObj = new ChessGame(gameInfo.game().currentTurn(), gameInfo.game().board()).getBoard();
+                ChessPiece piece = boardObj.getPiece(new ChessPosition(j, i));
                 if(piece == null){
                     foreground = EscapeSequences.RESET_TEXT_COLOR;
                     icon = EscapeSequences.EMPTY;
