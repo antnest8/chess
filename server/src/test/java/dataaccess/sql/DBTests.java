@@ -1,5 +1,6 @@
 package dataaccess.sql;
 
+import chess.ChessGame;
 import com.sun.jdi.InternalException;
 import dataaccess.*;
 import dataaccess.exceptions.UsernameTakenException;
@@ -14,6 +15,7 @@ public class DBTests {
     private static final AuthDAO AUTH_DAO = new DBAuthDAO();
     private static final UserDAO USER_DAO = new DBUserDAO();
     private static final GameDAO GAME_DAO = new DBGameDAO();
+    private static final SavedGame GAME_START = new SavedGame("WHITE", new ChessGame().getBoard().toString());
     private static Class<?> databaseMan;
 
 
@@ -191,7 +193,7 @@ public class DBTests {
     public void gameAddTest(){
         Assertions.assertEquals(1, GAME_DAO.createGame("new_game"));
         Assertions.assertFalse(GAME_DAO.listGames().isEmpty());
-        Assertions.assertEquals(new GameData(1,null,null,"new_game", null),
+        Assertions.assertEquals(new GameData(1,null,null,"new_game", GAME_START),
                 GAME_DAO.getGame(1));
     }
 
@@ -203,13 +205,13 @@ public class DBTests {
         Assertions.assertDoesNotThrow(()-> GAME_DAO.updateGame(
                 new GameData(1, "new_user", null, "new_game", null)
         ));
-        Assertions.assertEquals(new GameData(1,"new_user",null,"new_game", null),
+        Assertions.assertEquals(new GameData(1,"new_user",null,"new_game", GAME_START),
                 GAME_DAO.getGame(1));
         Assertions.assertDoesNotThrow(()-> GAME_DAO.updateGame(
                 new GameData(1, "new_user", "newer_user", "new_game", null)
         ));
         Assertions.assertEquals(
-                new GameData(1,"new_user","newer_user","new_game", null),
+                new GameData(1,"new_user","newer_user","new_game", GAME_START),
                 GAME_DAO.getGame(1));
     }
 

@@ -128,8 +128,10 @@ public class DBGameDAO implements GameDAO {
 
     public void clear(){
         try(var conn = DatabaseManager.getConnection()){
-            try(var preppedState = conn.prepareStatement("TRUNCATE TABLE game, gameobj;")){
+            try(var preppedState = conn.prepareStatement("TRUNCATE TABLE gameobj;"); var secondState =
+                    conn.prepareStatement(" TRUNCATE TABLE game;")){
                 preppedState.executeUpdate();
+                secondState.executeUpdate();
             }
         }catch (SQLException | DataAccessException ex){
             throw new InternalException("Error: cannot clear game data.");
