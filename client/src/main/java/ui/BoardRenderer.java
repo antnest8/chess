@@ -18,18 +18,18 @@ public class BoardRenderer {
 
     public static String render(GameData gameInfo, String username){
         StringBuilder boardStr = new StringBuilder();
-        boolean isWhite = !gameInfo.blackUsername().equals(username);
+        boolean isWhite = !username.equals(gameInfo.blackUsername());
 
-        String[][] board = {{EscapeSequences.SET_BG_COLOR_DARK_GREY + EscapeSequences.EMPTY, "a", "b", "c", "d", "e", "f", "g", "h", EscapeSequences.EMPTY + EscapeSequences.RESET_BG_COLOR},
-                {EscapeSequences.SET_BG_COLOR_DARK_GREY + "8", null, null, null, null, null, null, null, null, EscapeSequences.SET_BG_COLOR_DARK_GREY + EscapeSequences.RESET_BG_COLOR + "8"},
-                {EscapeSequences.SET_BG_COLOR_DARK_GREY + "7", null, null, null, null, null, null, null, null, EscapeSequences.SET_BG_COLOR_DARK_GREY + EscapeSequences.RESET_BG_COLOR + "7"},
-                {EscapeSequences.SET_BG_COLOR_DARK_GREY + "6", null, null, null, null, null, null, null, null, EscapeSequences.SET_BG_COLOR_DARK_GREY + EscapeSequences.RESET_BG_COLOR + "6"},
-                {EscapeSequences.SET_BG_COLOR_DARK_GREY + "5", null, null, null, null, null, null, null, null, EscapeSequences.SET_BG_COLOR_DARK_GREY + EscapeSequences.RESET_BG_COLOR + "5"},
-                {EscapeSequences.SET_BG_COLOR_DARK_GREY + "4", null, null, null, null, null, null, null, null, EscapeSequences.SET_BG_COLOR_DARK_GREY + EscapeSequences.RESET_BG_COLOR + "4"},
-                {EscapeSequences.SET_BG_COLOR_DARK_GREY + "3", null, null, null, null, null, null, null, null, EscapeSequences.SET_BG_COLOR_DARK_GREY + EscapeSequences.RESET_BG_COLOR + "3"},
-                {EscapeSequences.SET_BG_COLOR_DARK_GREY + "2", null, null, null, null, null, null, null, null, EscapeSequences.SET_BG_COLOR_DARK_GREY + EscapeSequences.RESET_BG_COLOR + "2"},
-                {EscapeSequences.SET_BG_COLOR_DARK_GREY + "1", null, null, null, null, null, null, null, null, EscapeSequences.SET_BG_COLOR_DARK_GREY + EscapeSequences.RESET_BG_COLOR + "1"},
-                {EscapeSequences.SET_BG_COLOR_DARK_GREY + EscapeSequences.EMPTY, "a", "b", "c", "d", "e", "f", "g", "h", EscapeSequences.EMPTY + EscapeSequences.RESET_BG_COLOR}};
+        String[][] board = {{EscapeSequences.RESET_BG_COLOR + EscapeSequences.SET_BG_COLOR_DARK_GREY + EscapeSequences.EMPTY, " a ", " b ", " c ", " d ", " e ", " f ", " g ", " h ", EscapeSequences.EMPTY + EscapeSequences.SET_BG_COLOR_DARK_GREY  + EscapeSequences.RESET_BG_COLOR},
+                {EscapeSequences.RESET_BG_COLOR + numb(8), null, null, null, null, null, null, null, null, numb(8) + EscapeSequences.RESET_BG_COLOR},
+                {EscapeSequences.RESET_BG_COLOR + numb(7), null, null, null, null, null, null, null, null, numb(7) + EscapeSequences.RESET_BG_COLOR},
+                {EscapeSequences.RESET_BG_COLOR + numb(6), null, null, null, null, null, null, null, null, numb(6) + EscapeSequences.RESET_BG_COLOR},
+                {EscapeSequences.RESET_BG_COLOR + numb(5), null, null, null, null, null, null, null, null, numb(5) + EscapeSequences.RESET_BG_COLOR},
+                {EscapeSequences.RESET_BG_COLOR + numb(4), null, null, null, null, null, null, null, null, numb(4) + EscapeSequences.RESET_BG_COLOR},
+                {EscapeSequences.RESET_BG_COLOR + numb(3), null, null, null, null, null, null, null, null, numb(3) + EscapeSequences.RESET_BG_COLOR},
+                {EscapeSequences.RESET_BG_COLOR + numb(2), null, null, null, null, null, null, null, null, numb(2) + EscapeSequences.RESET_BG_COLOR},
+                {EscapeSequences.RESET_BG_COLOR + numb(1), null, null, null, null, null, null, null, null, numb(1) + EscapeSequences.RESET_BG_COLOR},
+                {EscapeSequences.RESET_BG_COLOR + EscapeSequences.SET_BG_COLOR_DARK_GREY + EscapeSequences.EMPTY, " a ", " b ", " c ", " d ", " e ", " f ", " g ", " h ", EscapeSequences.EMPTY + EscapeSequences.SET_BG_COLOR_DARK_GREY  + EscapeSequences.RESET_BG_COLOR}};
 
         for(int j = 1; j < 9; j++){
             for(int i = 1; i < 9; i++){
@@ -37,13 +37,13 @@ public class BoardRenderer {
                 String foreground = "";
                 String icon = "";
 
-                if(j + i % 2 == 0){
+                if((j + i) % 2 == 0){
                     background = EscapeSequences.SET_BG_COLOR_WHITE;
                 } else{
                     background = EscapeSequences.SET_BG_COLOR_BLACK;
                 }
 
-                ChessPiece piece = gameInfo.game().getBoard().getPiece(new ChessPosition(j + 1, i + 1));
+                ChessPiece piece = gameInfo.game().getBoard().getPiece(new ChessPosition(j, i));
                 if(piece == null){
                     foreground = EscapeSequences.RESET_TEXT_COLOR;
                     icon = EscapeSequences.EMPTY;
@@ -64,15 +64,23 @@ public class BoardRenderer {
                 for(int i = 0; i < 10; i++){
                     boardStr.append(board[j][i]);
                 }
+                boardStr.append("\n");
             }
         }else{
-            for(int j = 9; j > 0; j--){
-                for(int i = 9; i > 0; i--){
+            for(int j = 9; j > -1; j--){
+                for(int i = 9; i > -1; i--){
                     boardStr.append(board[j][i]);
                 }
+                boardStr.append("\n");
             }
         }
+        boardStr.append(EscapeSequences.RESET_BG_COLOR).append(EscapeSequences.RESET_TEXT_COLOR);
 
         return boardStr.toString();
+    }
+
+    private static String numb(int num){
+        return EscapeSequences.SET_BG_COLOR_DARK_GREY + EscapeSequences.RESET_TEXT_COLOR + " " + num + " " +
+                EscapeSequences.RESET_TEXT_COLOR + EscapeSequences.SET_BG_COLOR_DARK_GREY;
     }
 }
