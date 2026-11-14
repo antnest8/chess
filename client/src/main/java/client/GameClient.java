@@ -198,10 +198,10 @@ public class GameClient {
         try{
             if(lineOps.length < 3) return "Malformed request: Use 'play <game_id> <WHITE/BLACK>'";
 
-            if(!lineOps[2].equalsIgnoreCase("white") || !lineOps[2].equalsIgnoreCase("black")){
+            if(!"WHITE".equalsIgnoreCase(lineOps[2]) && !"BLACK".equalsIgnoreCase(lineOps[2])){
                 return "Unable to parse " + lineOps[2] + " as WHITE or BLACK. Please try again.";
             }
-            facade.joinGame(auth, Integer.parseInt(lineOps[1]), lineOps[2].toLowerCase());
+            facade.joinGame(auth, Integer.parseInt(lineOps[1]), lineOps[2].toUpperCase());
             return "Game joined! (note: use 'observe' to see board for now)";
         } catch(UnauthorizedError e){
             authorized = false;
