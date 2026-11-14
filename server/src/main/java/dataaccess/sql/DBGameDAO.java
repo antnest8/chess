@@ -1,7 +1,6 @@
 package dataaccess.sql;
 
 import chess.ChessBoard;
-import chess.ChessGame;
 import com.sun.jdi.InternalException;
 import dataaccess.GameDAO;
 import dataaccess.exceptions.DataAccessException;

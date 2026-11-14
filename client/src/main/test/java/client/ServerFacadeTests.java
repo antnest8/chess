@@ -143,7 +143,7 @@ public class ServerFacadeTests {
         try {
             AuthData auth = facade.register(normUser);
             facade.createGame(auth, "myGame");
-            Assertions.assertTrue(facade.listGames(auth).games().size() == 1);
+            Assertions.assertEquals(1, facade.listGames(auth).games().size());
         } catch(Exception e){
             Assertions.fail("Unexpected Exception: " + e.getMessage());
         }
@@ -179,9 +179,9 @@ public class ServerFacadeTests {
     public void listGamesSuccessTest(){
         try {
             AuthData auth = facade.register(normUser);
-            Assertions.assertTrue(facade.listGames(auth).games().size() == 0);
+            Assertions.assertTrue(facade.listGames(auth).games().isEmpty());
             facade.createGame(auth, "myGame");
-            Assertions.assertTrue(facade.listGames(auth).games().size() == 1);
+            Assertions.assertEquals(1, facade.listGames(auth).games().size());
         } catch(Exception e){
             Assertions.fail("Unexpected Exception: " + e.getMessage());
         }
@@ -194,7 +194,6 @@ public class ServerFacadeTests {
         try {
             AuthData auth = facade.register(normUser);
             facade.createGame(auth, "myGame");
-            GameList games = facade.listGames(auth);
             facade.joinGame(auth, 1, "WHITE");
             GameList newgames = facade.listGames(auth);
             Assertions.assertTrue(newgames.games().contains(

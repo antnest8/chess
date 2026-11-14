@@ -176,7 +176,7 @@ public class GameClient {
                 result.append(" White: ").append(game.whiteUsername()).append(" Black: ").append(game.blackUsername());
                 result.append("\n");
             }
-            return "Games:\n" + result.toString();
+            return "Games:\n" + result;
         } catch(UnauthorizedError e){
             authorized = false;
             auth = null;

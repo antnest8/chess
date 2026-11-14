@@ -1,6 +1,5 @@
 package dataaccess;
 
-import dataaccess.exceptions.DataAccessException;
 import dataaccess.exceptions.UsernameTakenException;
 import model.LoginAttempt;
 import model.UserData;

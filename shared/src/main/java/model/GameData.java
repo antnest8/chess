@@ -1,7 +1,5 @@
 package model;
 
-import chess.ChessGame;
-
 public record GameData(int gameID, String whiteUsername, String blackUsername, String gameName, SavedGame game) {
     public GameData {
         if(gameID == 0 || gameName == null){

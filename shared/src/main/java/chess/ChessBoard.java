@@ -1,7 +1,6 @@
 package chess;
 
 import java.util.Objects;
-import java.util.Scanner;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -61,7 +60,7 @@ public class ChessBoard {
                         new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KNIGHT));
                 case "Q" -> addPiece(new ChessPosition((count/8)+1, (count%8)+1),
                         new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.QUEEN));
-            };
+            }
             count++;
         }
     }
