@@ -1,7 +1,9 @@
 package chess;
 
 import java.util.Objects;
+import java.util.Scanner;
 import java.util.function.Predicate;
+import java.util.regex.Pattern;
 
 /**
  * A chessboard that can hold and rearrange chess pieces.
@@ -10,7 +12,6 @@ import java.util.function.Predicate;
  * signature of the existing methods.
  */
 public class ChessBoard {
-
     /*
     ---Constructors -----------------------------------------
      */
@@ -24,6 +25,43 @@ public class ChessBoard {
             for(int x = 0; x < 8; x++){
                 boardSquares[y][x] = new ChessPosition(y+1, x+1);
             }
+        }
+    }
+
+    public ChessBoard(String boardStr){
+        this();
+        Scanner boardIn = new Scanner(boardStr);
+        Pattern pat = Pattern.compile("\\|(.)\\|");
+        int count = 0;
+        while(boardIn.hasNext(pat)){
+            if(count > 63) break; //just making sure to avoid out of bounds errors (who knows)
+            switch(boardIn.next(pat)){
+                case "p" -> addPiece(new ChessPosition((count/8)+1, (count%8)+1),
+                      new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN));
+                case "r" -> addPiece(new ChessPosition((count/8)+1, (count%8)+1),
+                      new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK));
+                case "b" -> addPiece(new ChessPosition((count/8)+1, (count%8)+1),
+                        new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.BISHOP));
+                case "k" -> addPiece(new ChessPosition((count/8)+1, (count%8)+1),
+                        new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KING));
+                case "n" -> addPiece(new ChessPosition((count/8)+1, (count%8)+1),
+                        new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KNIGHT));
+                case "q" -> addPiece(new ChessPosition((count/8)+1, (count%8)+1),
+                        new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.QUEEN));
+                case "P" -> addPiece(new ChessPosition((count/8)+1, (count%8)+1),
+                        new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN));
+                case "R" -> addPiece(new ChessPosition((count/8)+1, (count%8)+1),
+                        new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.ROOK));
+                case "B" -> addPiece(new ChessPosition((count/8)+1, (count%8)+1),
+                        new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.BISHOP));
+                case "K" -> addPiece(new ChessPosition((count/8)+1, (count%8)+1),
+                        new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KING));
+                case "N" -> addPiece(new ChessPosition((count/8)+1, (count%8)+1),
+                        new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KNIGHT));
+                case "Q" -> addPiece(new ChessPosition((count/8)+1, (count%8)+1),
+                        new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.QUEEN));
+            };
+            count++;
         }
     }
 
@@ -120,6 +158,7 @@ public class ChessBoard {
         }
 
     }
+
 
     @Override
     public String toString() {

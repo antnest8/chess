@@ -21,6 +21,11 @@ public class ChessGame {
         currentTurn = TeamColor.WHITE;
     }
 
+    public ChessGame(String current_turn, String boardStr){
+        currentTurn = TeamColor.valueOf(current_turn);
+        board = new ChessBoard(boardStr);
+    }
+
     /**
      * @return Which team's turn it is
      */
