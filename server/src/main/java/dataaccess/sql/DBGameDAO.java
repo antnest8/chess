@@ -1,10 +1,13 @@
 package dataaccess.sql;
 
+import chess.ChessBoard;
+import chess.ChessGame;
 import com.sun.jdi.InternalException;
 import dataaccess.GameDAO;
 import dataaccess.exceptions.DataAccessException;
 import model.BadDataRequest;
 import model.GameData;
+import model.SavedGame;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -27,8 +30,10 @@ public class DBGameDAO implements GameDAO {
     //probably implement this completely later
     private static final String GAMEOBJ_SCHEMA = """
             CREATE TABLE IF NOT EXISTS gameobj(
+            game_id INT NOT NULL,
             current_turn CHAR(5) NOT NULL,
             board TEXT NOT NULL,
+            PRIMARY KEY(game_id)
             );
             """;
 
@@ -47,6 +52,14 @@ public class DBGameDAO implements GameDAO {
                 if(resultSet.next()){
                     id = resultSet.getInt(1);
                 }
+                try(var preppedObjState = conn.prepareStatement("INSERT INTO gameobj(game_id, current_turn, board) VALUES (?, ?, ?);")){
+                    preppedObjState.setInt(1, id);
+                    preppedObjState.setString(2, "WHITE");
+                    ChessBoard board = new ChessBoard();
+                    board.resetBoard();
+                    preppedObjState.setString(3, board.toString());
+                    preppedObjState.executeUpdate();
+                }
                 return id;
             }
         }catch (SQLException | DataAccessException ex){
@@ -56,7 +69,9 @@ public class DBGameDAO implements GameDAO {
 
     public GameData getGame(int gameID){
         try(var conn = DatabaseManager.getConnection()){
-            try(var preppedState = conn.prepareStatement("SELECT white_user, black_user, name FROM game WHERE id = ?;")){
+            try(var preppedState = conn.prepareStatement(
+                    "SELECT game.white_user, game.black_user, game.name, gameobj.current_turn, gameobj.board " +
+                            "FROM game, gameobj WHERE game.id = ? AND gameobj.game_id = game.id;")){
                 preppedState.setInt(1, gameID);
                 try(var rs = preppedState.executeQuery()){
                     if(rs.next()) {
@@ -95,7 +110,9 @@ public class DBGameDAO implements GameDAO {
 
     public Collection<GameData> listGames(){
         try(var conn = DatabaseManager.getConnection()){
-            try(var preppedState = conn.prepareStatement("SELECT id, white_user, black_user, name FROM game;")){
+            try(var preppedState = conn.prepareStatement(
+                    "SELECT game.id, game.white_user, game.black_user, game.name, gameobj.current_turn, gameobj.board" +
+                            " FROM game, gameobj WHERE gameobj.game_id =  game.id;")){
                 try(var rs = preppedState.executeQuery()){
                     Collection<GameData> gameList = new ArrayList<GameData>();
                     while(rs.next()) {
@@ -111,7 +128,7 @@ public class DBGameDAO implements GameDAO {
 
     public void clear(){
         try(var conn = DatabaseManager.getConnection()){
-            try(var preppedState = conn.prepareStatement("TRUNCATE TABLE game;")){
+            try(var preppedState = conn.prepareStatement("TRUNCATE TABLE game, gameobj;")){
                 preppedState.executeUpdate();
             }
         }catch (SQLException | DataAccessException ex){
@@ -126,11 +143,11 @@ public class DBGameDAO implements GameDAO {
                 try (var preppedState = conn.prepareStatement(GAME_SCHEMA)) {
                     preppedState.executeUpdate();
                 }
-                /* --note: this is for the future--
+
                 try (var preppedState = conn.prepareStatement(GAMEOBJ_SCHEMA)) {
                     preppedState.executeUpdate();
                 }
-                */
+
             }
         }catch (SQLException | DataAccessException ex){
             throw new InternalException("Error: configuration Error");
@@ -142,7 +159,7 @@ public class DBGameDAO implements GameDAO {
                 rs.getString("white_user"),
                 rs.getString("black_user"),
                 rs.getString("name"),
-                null);
+                new SavedGame(rs.getString("current_turn"), rs.getString("board")));
     }
 
     private GameData parseSQLGame(ResultSet rs)throws SQLException{
@@ -150,6 +167,6 @@ public class DBGameDAO implements GameDAO {
                 rs.getString("white_user"),
                 rs.getString("black_user"),
                 rs.getString("name"),
-                null);
+                new SavedGame(rs.getString("current_turn"), rs.getString("board")));
     }
 }

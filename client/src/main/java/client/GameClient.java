@@ -23,8 +23,8 @@ public class GameClient {
 
     public GameClient(){
         server = new Server();
-        int port = server.run(0);
-        facade = new ServerFacade("https://localhost:" + port);
+        var port = server.run(0);
+        facade = new ServerFacade("http://localhost:" + port);
         startRepl();
     }
 
@@ -35,10 +35,10 @@ public class GameClient {
                 String line = consoleIn.nextLine();
                 if(!authorized && !line.isBlank()){
                     String response = handleUnauthorized(line);
+                    System.out.println(response);
                 } else if(authorized && !line.isBlank()){
                     String response = handleAuthorized(line);
-                } else{
-                    System.out.println();
+                    System.out.println(response);
                 }
             }
         } catch (Exception e){
@@ -86,6 +86,7 @@ public class GameClient {
     private String handleLogout(){
         try{
             facade.logout(auth);
+            authorized = false;
         } catch(ServerError e){
             return "Server Unresponsive: Logout failed.";
         } catch(ResponseException e){
@@ -177,7 +178,7 @@ public class GameClient {
             for(GameData game : list.games()){
                 result.append(game.gameID()).append(". ");
                 result.append("Name: ").append(game.gameName());
-                result.append("White: ").append(game.whiteUsername()).append(" Black: ").append(game.blackUsername());
+                result.append(" White: ").append(game.whiteUsername()).append(" Black: ").append(game.blackUsername());
                 result.append("\n");
             }
             return "Games:\n" + result.toString();
