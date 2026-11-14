@@ -1,4 +1,5 @@
 package service;
+import chess.ChessGame;
 import com.google.gson.Gson;
 import dataaccess.exceptions.DataAccessException;
 import dataaccess.exceptions.GameSpaceTaken;
@@ -6,6 +7,7 @@ import dataaccess.exceptions.LoginIncorrect;
 import dataaccess.exceptions.UsernameTakenException;
 import model.AuthData;
 import model.GameData;
+import model.SavedGame;
 import org.junit.jupiter.api.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -18,6 +20,8 @@ public class ServiceTests {
     private final static String NEW_GAME = "{\"gameName\": \"gameName\"}";
     private final static String JOIN_GAME_WHITE = "{\"playerColor\": \"WHITE\",\"gameID\": 1}";
     private final static String JOIN_GAME_BLACK = "{\"playerColor\": \"BLACK\",\"gameID\": 1}";
+    private static final SavedGame GAME_START = new SavedGame("WHITE", new ChessGame().getBoard().toString());
+
     private AuthData existingAuth;
 
     @BeforeAll
@@ -146,7 +150,7 @@ public class ServiceTests {
             int gameID = svc.createGame(NEW_GAME);
             var gameList = svc.listGames();
             Assertions.assertTrue(gameList.contains(
-                    new GameData(gameID, null, null, "gameName", null)),
+                    new GameData(gameID, null, null, "gameName", GAME_START)),
                     "could not find new game in gameList"
             );
             svc.clear();
@@ -190,11 +194,11 @@ public class ServiceTests {
             svc.createGame(NEW_GAME);
             svc.joinGame(JOIN_GAME_WHITE, existingAuth.authToken());
             Assertions.assertTrue(svc.listGames().contains(new GameData(
-                    1, "preUsername", null, "gameName", null)
+                    1, "preUsername", null, "gameName", GAME_START)
             ), "joining white failed");
             svc.joinGame(JOIN_GAME_BLACK, existingAuth.authToken());
             Assertions.assertTrue(svc.listGames().contains(new GameData(
-                    1, "preUsername", "preUsername", "gameName", null)
+                    1, "preUsername", "preUsername", "gameName", GAME_START)
             ), "joining black failed");
         } catch (DataAccessException ex){
             Assertions.fail("Unexpected Error interrupted tests: " + ex.getMessage());

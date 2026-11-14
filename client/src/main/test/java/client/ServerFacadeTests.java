@@ -1,5 +1,6 @@
 package client;
 
+import chess.ChessGame;
 import client.exceptions.ResponseException;
 import model.*;
 import org.junit.jupiter.api.*;
@@ -197,7 +198,8 @@ public class ServerFacadeTests {
             facade.joinGame(auth, 1, "WHITE");
             GameList newgames = facade.listGames(auth);
             Assertions.assertTrue(newgames.games().contains(
-                    new GameData(1, "newUser", null, "myGame", null)));
+                    new GameData(1, "newUser", null, "myGame",
+                            new SavedGame("WHITE", new ChessGame().getBoard().toString()))));
         } catch(Exception e){
             Assertions.fail("Unexpected Exception: " + e.getMessage());
         }
