@@ -109,7 +109,7 @@ public class GameClient {
     }
 
     private String authedOptions(){
-        return "ChessClient Options - logged in.\n"
+        return "ChessClient Options - logged in as "+ auth.username() +".\n"
                 + "exit: exits the program\n"
                 + "logout: log out\n"
                 + "create <game_name>: create a game\n"
@@ -231,7 +231,7 @@ public class GameClient {
 
 
 
-            return BoardRenderer.render(game.game());
+            return BoardRenderer.render(game, auth.username());
         } catch(UnauthorizedError e){
             authorized = false;
             auth = null;
