@@ -4,6 +4,7 @@ import client.exceptions.*;
 import dataaccess.exceptions.UsernameTakenException;
 import model.*;
 import server.Server;
+import ui.BoardRenderer;
 import ui.EscapeSequences;
 
 import java.nio.charset.StandardCharsets;
@@ -120,6 +121,8 @@ public class GameClient {
 
     private String handleRegister(String[] lineOps){
         try{
+            if(lineOps.length < 4) return "Malformed request: Use 'register <username> <password> <email>'";
+
             auth = facade.register(new UserData(lineOps[1], lineOps[2], lineOps[3]));
             authorized = true;
             return "Succesfully logged in. Try 'help' for new options.";
@@ -135,6 +138,8 @@ public class GameClient {
 
     private String handleLogin(String[] lineOps){
         try{
+            if(lineOps.length < 3) return "Malformed request: Use 'login <username> <password>'";
+
             auth = facade.login(new LoginAttempt(lineOps[1], lineOps[2]));
             authorized = true;
             return "Succesfully logged in. Try 'help' for new options.";
@@ -148,9 +153,10 @@ public class GameClient {
         }
     }
 
-    private String handleCreateGame(String gameName){
+    private String handleCreateGame(String[] lineOps){
         try{
-            facade.createGame(auth, gameName);
+            if(lineOps.length < 2) return "Malformed request: Use 'create <game_name>'";
+            facade.createGame(auth, lineOps[1]);
             return "Game created! Use 'list' to see open games";
         } catch(UnauthorizedError e){
             authorized = false;
@@ -189,6 +195,8 @@ public class GameClient {
 
     private String handleJoinGame(String[] lineOps){
         try{
+            if(lineOps.length < 3) return "Malformed request: Use 'play <game_id> <WHITE/BLACK>'";
+
             if(!lineOps[2].equalsIgnoreCase("white") || !lineOps[2].equalsIgnoreCase("black")){
                 return "Unable to parse " + lineOps[2] + " as WHITE or BLACK. Please try again.";
             }
@@ -208,5 +216,33 @@ public class GameClient {
         }
     }
 
+    private String handleObserveGame(String[] lineOps){
+        try{
+            if(lineOps.length < 2) return "Malformed request: Use 'play <game_id>'";
 
+            GameList list = facade.listGames(auth);
+            GameData game = null;
+            for(GameData g : list.games()){
+                if(g.gameID() == Integer.parseInt(lineOps[1])){
+                    game = g;
+                }
+            }
+            if(game == null) return "Game not found! Try again (i.e 'list')";
+
+
+
+            return BoardRenderer.render(game.game());
+        } catch(UnauthorizedError e){
+            authorized = false;
+            auth = null;
+            return "Unauthorized! Re-login please";
+        } catch(GameNotFoundError e){
+            return "Game not found! Please use the correct ID (i.e 'list')";
+        }catch(ServerError e){
+            return "Unknown Server Error: Try again or check connection";
+        } catch(ResponseException e){
+            forceExit();
+            return "Fatal Client Error: exiting...";
+        }
+    }
 }
