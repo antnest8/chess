@@ -3,6 +3,7 @@ package chess;
 import java.util.Objects;
 import java.util.Scanner;
 import java.util.function.Predicate;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -30,12 +31,12 @@ public class ChessBoard {
 
     public ChessBoard(String boardStr){
         this();
-        Scanner boardIn = new Scanner(boardStr);
-        Pattern pat = Pattern.compile("\\|(.)\\|");
+        Pattern pat = Pattern.compile("\\|(.)(?=\\|)");
+        Matcher match = pat.matcher(boardStr);
         int count = 0;
-        while(boardIn.hasNext(pat)){
+        while(match.find()){
             if(count > 63) break; //just making sure to avoid out of bounds errors (who knows)
-            switch(boardIn.next(pat)){
+            switch(match.group(1)){
                 case "p" -> addPiece(new ChessPosition((count/8)+1, (count%8)+1),
                       new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN));
                 case "r" -> addPiece(new ChessPosition((count/8)+1, (count%8)+1),
